@@ -18,16 +18,57 @@ import base64
 
 
 class Bilibili:
-    def __init__(self, cookie=''):
-        # cookie = 'UM_distinctid=15ad6ed506d8a9-0709cb00d6530d-6a11157a-1aeaa0-15ad6ed506e794; fts=1489664561; pgv_pvi=470152192; sid=7x2bt5eo; buvid3=FE847D05-3301-42BD-AC2D-25327D3DF19228064infoc; rpdid=oqqwppklsidoplwowkqpw; LIVE_BUVID=d815f75def06ae324889da90d7f18935; LIVE_BUVID__ckMd5=e04169814ee61cb4; finger=7360d3c2; _ga=GA1.2.3490919.1490526399; LIVE_LOGIN_DATA=187115e74e4856f5d18986a2d8f30abdcb54770f; LIVE_LOGIN_DATA__ckMd5=37b109422e5fab32; purl_token=bilibili_1497149920; DedeUserID=132604873; DedeUserID__ckMd5=e6a58ccc06aec8f8; SESSDATA=4de5769d%2C1497234962%2C20460f14; bili_jct=c8cd121a741e832f91cba99d357f3049; _cnt_pm=0; _cnt_notify=0; _cnt_dyn=0; _cnt_dyn__ckMd5=42c5c8dec5428373; pgv_si=s6399575040; CNZZDATA2724999=cnzz_eid%3D1823204898-1489660091-https%253A%252F%252Fwww.google.com%252F%26ntime%3D1497150146; _dfcaptcha=7b3fe04c01e9621959ec62b94e207bf3'
+    def __init__(self):
         self.session = requests.session()
-        self.session.headers["cookie"] = cookie
-        self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
-        self.mid = re.search('DedeUserID=(.*?);', cookie).group(1)
-        self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
-        self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
-        # session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
-        # session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+
+    def login(self, user, pwd):
+        '''
+        WARNING: THE API IS NOT OFFICIAL API
+        DETAILS: https://api.kaaass.net/biliapi/docs/
+
+        :param user: username
+        :param pwd: password
+        :return: if success return True
+                 else return msg json
+        '''
+        r = requests.post(
+                url='https://api.kaaass.net/biliapi/user/login',
+                data={
+                    'user'  : user,
+                    'passwd': pwd
+                },
+                headers={
+                    'x-requested-with': 'XMLHttpRequest'
+                }
+
+        )
+        # {"ts":1498361700,"status":"OK","mid":132604873,"access_key":"fb6c52162481d92a20875aca101ebe92","expires":1500953701}
+        # print(r.text)
+        if r.json()['status'] != 'OK':
+            return r.json()
+
+        access_key = r.json()['access_key']
+        r = requests.get(
+                url='https://api.kaaass.net/biliapi/user/sso?access_key=' + access_key,
+                headers={
+                    'x-requested-with': 'XMLHttpRequest'
+                }
+        )
+        # {"ts":1498361701,"status":"OK","cookie":"sid=4jj9426i; DedeUserID=132604873; DedeUserID__ckMd5=e6a58ccc06aec8f8; SESSDATA=4de5769d%2C1498404903%2Cd86e4dea; bili_jct=5114b3630514ab72df2cb2e7e6fcd2eb"}
+        # print(r.text)
+
+        if r.json()['status'] == 'OK':
+            cookie = r.json()['cookie']
+            self.session.headers["cookie"] = cookie
+            self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
+            self.mid = re.search('DedeUserID=(.*?);', cookie).group(1)
+            self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
+            self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
+            # session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
+            # session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+            return True
+        else:
+            return r.json()
 
     def upload(self,
                filepath,
@@ -188,6 +229,7 @@ class Bilibili:
 
 def main():
     pass
+
 
 if __name__ == '__main__':
     main()
