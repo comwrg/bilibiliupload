@@ -196,7 +196,7 @@ class Bilibili:
         # {"status":true,"data":{"cid":"15812"}}
         print(r.json())
 
-    def addVideo(self, cid, aids):
+    def channel_addVideo(self, cid, aids):
         '''
 
         :param cid:
@@ -215,7 +215,18 @@ class Bilibili:
         )
         print(r.json())
 
-    def up(self, f):
+    def cover_up(self, img):
+        '''
+
+        :param img: img path or stream
+        :type img:str or BufferedReader
+        :return: img url
+        '''
+
+        if isinstance(img, str):
+            f = open(img, 'rb')
+        else:
+            f = img
         r = self.session.post(
                 url='https://member.bilibili.com/x/vu/web/cover/up',
                 data={
