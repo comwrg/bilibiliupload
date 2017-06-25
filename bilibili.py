@@ -187,43 +187,7 @@ class Bilibili:
 
 
 def main():
-    print("start")
-    b = Bilibili(
-        'sid=hz0z8upn; DedeUserID=132604873; DedeUserID__ckMd5=e6a58ccc06aec8f8; SESSDATA=4de5769d%2C1499812589%2Cf72abf9f; bili_jct=b3704f8c5a959c0c60ef098554b34e3c; _cnt_pm=0; _cnt_notify=0; fts=1497220591; buvid3=20F8C63F-5D11-4FE8-8E48-CC563A06720332373infoc; UM_distinctid=15c994d2d02cc-060c9ab6858e45-4e47052e-1aeaa0-15c994d2d0387c; pgv_pvi=1171635200; pgv_si=s6751656960; _cnt_dyn=0; _cnt_dyn__ckMd5=42c5c8dec5428373; _dfcaptcha=8fc887dffa2b9dc2c3f3ffbe2dd5d432')
-    path_base = '/root/youtube2bilibili/'
-    item = os.listdir(path_base)
-    # item = filter(os.path.isfile, item)
-    # os.system(
-    #     'youtube-dl -q --download-archive archive.txt --write-thumbnail "https://www.youtube.com/channel/UCuRCGfLys_ol-_JdksUoMCg/videos" &')
+    pass
 
-    item = list(map(lambda x: path_base + x, item))
-    item.sort(key=lambda x: os.path.getmtime(x))
-    item = list(map(lambda x: os.path.basename(x), item))
-    for file_name in item:
-        if file_name.endswith('.mp4'):
-            if 'cover' in file_name.lower():
-                cover_path = path_base + file_name.replace('.mp4', '.jpg')
-                with open(cover_path, 'rb') as f:
-                    cover = b.up(f)
-
-                b.upload(path_base + file_name,
-                         'https://www.youtube.com/watch?v=' + file_name[-4 - 11:-4],
-                         file_name[0: -4 - 11 - 1].replace('_', ' '),
-                         31,
-                         'Continuum',
-                         '-',
-                         cover
-                         )
-                os.remove(path_base + file_name)
-                os.remove(cover_path)
-                print('sleeping...')
-                time.sleep(60*2)
-            else:
-                os.remove(path_base + file_name)
-                os.remove(path_base + file_name.replace('.mp4', '.jpg'))
-
-
-# if __name__ == '__main__':
-#     main()
-
-main()
+if __name__ == '__main__':
+    main()
