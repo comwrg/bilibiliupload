@@ -125,7 +125,7 @@ class Bilibili:
         url_complete = j['complete']
         url_filename = j['filename']
         self.session.options(url)
-        filename = '1.MP4'
+        filename = os.path.basename(filepath)
         with open(filepath, 'rb') as f:
             # 1M = 1024K = 1024 * 1024B
             CHUNK_SIZE = 10 * 1024 * 1024
