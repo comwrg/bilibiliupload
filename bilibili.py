@@ -60,9 +60,8 @@ class Bilibili:
         if r.json()['status'] == 'OK':
             cookie = r.json()['cookie']
             self.session.headers["cookie"] = cookie
-            # 我的bili_jct字段总是出现在cookie的最后部分，没有‘；’结尾，所以下面这行re报错，要把分号换成$。不知道是不是只有我遇到这个问题？
-            self.csrf = re.search('bili_jct=(.*?)$', cookie).group(1)
-            self.mid = re.search('DedeUserID=(.*?);', cookie).group(1)
+            self.csrf = re.search('bili_jct=(.*?);', cookie+';').group(1)
+            self.mid = re.search('DedeUserID=(.*?);', cookie+';').group(1)
             self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
             self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
             # session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
