@@ -60,8 +60,8 @@ class Bilibili:
         if r.json()['status'] == 'OK':
             cookie = r.json()['cookie']
             self.session.headers["cookie"] = cookie
-            self.csrf = re.search('bili_jct=(.*?);', cookie+';').group(1)
-            self.mid = re.search('DedeUserID=(.*?);', cookie+';').group(1)
+            self.csrf = re.search('bili_jct=(.*?);', cookie + ';').group(1)
+            self.mid = re.search('DedeUserID=(.*?);', cookie + ';').group(1)
             self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
             self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
             # session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
@@ -72,14 +72,13 @@ class Bilibili:
 
     def upload(self,
                filepath,
-               source,
                title,
                tid,
                tag,
                desc,
+               source='',
                cover='',
                no_reprint=1,
-               copyright=2
                ):
         """
         
@@ -160,6 +159,8 @@ class Bilibili:
                               })
         print(r.text)
 
+        # if source is empty, copyright=1, else copyright=2
+        copyright = 2 if source else 1
         r = self.session.post('https://member.bilibili.com/x/vu/web/add',
                               json={
                                   "copyright" : copyright,
