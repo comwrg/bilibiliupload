@@ -146,6 +146,10 @@ class Bilibili:
                 ]
                 r = self.session.post(url, files=file)
                 print(r.text, chunks_num, chunks_index)
+                # 不清楚是否是我的网络有问题，我总有50%机会遇到504出错，所以我自己加上这段发现504就重新上传的代码
+                if re.search('504', r.text):
+                    chunks_index = 0
+                    f.seek(0, 0)
 
         r = self.session.post(url_complete,
                               data={
