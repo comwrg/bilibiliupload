@@ -145,6 +145,9 @@ class Bilibili:
                     ('md5', (None, utils.md5(chunks_data), None))
                 ]
                 r = self.session.post(url, files=file)
+                if re.search('504', r.text):
+                    chunks_index = 0
+                    f.seek(0, 0)
                 print(r.text, chunks_num, chunks_index)
 
         r = self.session.post(url_complete,
