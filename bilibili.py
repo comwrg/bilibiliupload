@@ -164,7 +164,7 @@ class Bilibili:
 
         # if source is empty, copyright=1, else copyright=2
         copyright = 2 if source else 1
-        r = self.session.post('https://member.bilibili.com/x/vu/web/add',
+        r = self.session.post('https://member.bilibili.com/x/vu/web/add?csrf=' + self.csrf,
                               json={
                                   "copyright" : copyright,
                                   "source"    : source,
