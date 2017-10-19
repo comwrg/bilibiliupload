@@ -234,7 +234,8 @@ class Bilibili:
         r = self.session.post(
                 url='https://member.bilibili.com/x/vu/web/cover/up',
                 data={
-                    'cover': b'data:image/jpeg;base64,' + (base64.b64encode(f.read()))
+                    'cover': b'data:image/jpeg;base64,' + (base64.b64encode(f.read())),
+                    'csrf': self.csrf,
                 }
         )
         # print(r.text)
