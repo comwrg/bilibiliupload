@@ -1,5 +1,5 @@
 # bilibili upload
-
+Documentation: https://comwrg.github.io/bilibiliUpload
 ## How to use
 simple example
 ```python
