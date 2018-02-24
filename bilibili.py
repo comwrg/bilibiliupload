@@ -1,20 +1,16 @@
 # coding=utf-8
-'''
-@author: comwrg
-@license: MIT
-@time : 2017/06/09
-@desc : 
-'''
+"""
+:author: comwrg
+:license: MIT
+:time: 2017/06/09
+"""
 
-import math
 import os
 import re
-
-import requests
-
+import math
 import utils
-import time
 import base64
+import requests
 
 
 class Bilibili:
@@ -22,15 +18,18 @@ class Bilibili:
         self.session = requests.session()
 
     def login(self, user, pwd):
-        '''
-        WARNING: THE API IS NOT OFFICIAL API
-        DETAILS: https://api.kaaass.net/biliapi/docs/
+        """
+        .. warning::
+           | THE API IS NOT OFFICIAL API
+           | DETAILS: https://api.kaaass.net/biliapi/docs/
 
         :param user: username
+        :type user: str
         :param pwd: password
+        :type pwd: str
         :return: if success return True
                  else return msg json
-        '''
+        """
         r = requests.post(
                 url='https://api.kaaass.net/biliapi/user/login',
                 data={
@@ -81,41 +80,23 @@ class Bilibili:
                no_reprint=1,
                ):
         """
-        
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="file"; filename="1.MP4"
-        Content-Type: video/mp4
 
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="chunk"
-
-        0
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="chunks"
-
-        2
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="filesize"
-
-        10485760
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="version"
-
-        1.0.1
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N
-        Content-Disposition: form-data; name="md5"
-
-        a18c9cd7fe6543794b89e018eea77cd5
-        ------WebKitFormBoundaryA1hnRocMNqOz2G9N--
-        :type copyright int
-        :param copyright: 1 or 2, 1=自制, 2=转载(default)
-        :param source:转载地址
-        :type no_reprint int
-        :param no_reprint: 0=可以转载, 1=禁止转载(default)
-        :type tid int
-        :param tid: https://member.bilibili.com/x/web/archive/pre
-        :param cover:
-        :return: 
+        :param filepath: file path
+        :type filepath: str
+        :param title: video's title
+        :type title: str
+        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
+        :type tid: int
+        :param tag: video's tag. TODO: Why only one tag? I don't remember.
+        :type tag: str
+        :param desc: video's description
+        :type desc: str
+        :param source: (optional) 转载地址
+        :type source: str
+        :param cover: (optional) cover's URL, use method *cover_up* to get
+        :type cover: str
+        :param no_reprint: (optional) 0=可以转载, 1=禁止转载(default)
+        :type no_reprint: int
         """
 
         r = self.session.get("http://member.bilibili.com/preupload?profile=ugcfr%2Fweb3&mid=26941566&_=1496916151461")
@@ -137,12 +118,12 @@ class Bilibili:
                     break
                 chunks_index += 1
                 file = [
-                    ('file', (filename, chunks_data, 'video/mp4')),
-                    ('chunk', (None, str(chunks_index), None)),
-                    ('chunks', (None, str(chunks_num), None)),
-                    ('filesize', (None, str(len(chunks_data)), None)),
-                    ('version', (None, '1.0.1', None)),
-                    ('md5', (None, utils.md5(chunks_data), None))
+                    ('file'    , (filename, chunks_data            , 'video/mp4')),
+                    ('chunk'   , (None    , str(chunks_index)      , None       )),
+                    ('chunks'  , (None    , str(chunks_num)        , None       )),
+                    ('filesize', (None    , str(len(chunks_data))  , None       )),
+                    ('version' , (None    , '1.0.1'                , None       )),
+                    ('md5'     , (None    ,  utils.md5(chunks_data), None       )),
                 ]
                 r = self.session.post(url, files=file)
                 if re.search('504', r.text):
@@ -185,6 +166,13 @@ class Bilibili:
         print(r.content)
 
     def addChannel(self, name, intro=''):
+        """
+
+        :param name: channel's name
+        :type name: str
+        :param intro: channel's introduction
+        :type intro: str
+        """
         r = self.session.post(
                 url='https://space.bilibili.com/ajax/channel/addChannel',
                 data={
@@ -201,12 +189,13 @@ class Bilibili:
         print(r.json())
 
     def channel_addVideo(self, cid, aids):
-        '''
+        """
 
-        :param cid:
-        :param aids: type:list, [123, 123, 123]
-        :return:
-        '''
+        :param cid: channel's id
+        :type cid: int
+        :param aids: videos' id
+        :type aids: list<int>
+        """
 
         r = self.session.post(
                 url='https://space.bilibili.com/ajax/channel/addVideo',
@@ -220,12 +209,12 @@ class Bilibili:
         print(r.json())
 
     def cover_up(self, img):
-        '''
+        """
 
         :param img: img path or stream
-        :type img:str or BufferedReader
-        :return: img url
-        '''
+        :type img: str or BufferedReader
+        :return: img URL
+        """
 
         if isinstance(img, str):
             f = open(img, 'rb')
