@@ -87,8 +87,8 @@ class Bilibili:
         :type title: str
         :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
         :type tid: int
-        :param tag: video's tag. TODO: Why only one tag? I don't remember.
-        :type tag: str
+        :param tag: video's tag
+        :type tag: list<str>
         :param desc: video's description
         :type desc: str
         :param source: (optional) 转载地址
@@ -151,7 +151,7 @@ class Bilibili:
                                   "source"    : source,
                                   "title"     : title,
                                   "tid"       : tid,
-                                  "tag"       : tag,
+                                  "tag"       : ','.join(tag),
                                   "no_reprint": no_reprint,
                                   "desc"      : desc,
                                   "cover"     : cover,
