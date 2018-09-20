@@ -108,7 +108,7 @@ class Bilibili:
         filename = os.path.basename(filepath)
         with open(filepath, 'rb') as f:
             # 1M = 1024K = 1024 * 1024B
-            CHUNK_SIZE = 10 * 1024 * 1024
+            CHUNK_SIZE = 7 * 1024 * 1024
             filesize = os.path.getsize(filepath)
             chunks_num = math.ceil(filesize / CHUNK_SIZE)
             chunks_index = 0
