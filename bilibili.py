@@ -107,48 +107,79 @@ class Bilibili:
         :type no_reprint: int
         """
 
-        r = self.session.get("http://member.bilibili.com/preupload?profile=ugcfr%2Fweb3&mid=26941566&_=1496916151461")
-        j = r.json()
-        url = j['url']
-        url_complete = j['complete']
-        url_filename = j['filename']
-        self.session.options(url)
         filename = os.path.basename(filepath)
+        filesize = os.path.getsize(filepath)
+        r = self.session.get('https://member.bilibili.com/preupload?'
+                             'os=upos&upcdn=ws&name={name}&size={size}&r=upos&profile=ugcupos%2Fyb&ssl=0'
+                             .format(name=filename, size=filesize))
+        """return example
+        {
+            "upos_uri": "upos://ugc/i181012ws18x52mti3gg0h33chn3tyhp.mp4",
+            "biz_id": 58993125,
+            "endpoint": "//upos-hz-upcdnws.acgvideo.com",
+            "endpoints": [
+                "//upos-hz-upcdnws.acgvideo.com",
+                "//upos-hz-upcdntx.acgvideo.com"
+            ],
+            "chunk_retry_delay": 3,
+            "chunk_retry": 200,
+            "chunk_size": 4194304,
+            "threads": 2,
+            "timeout": 900,
+            "auth": "os=upos&cdn=upcdnws&uid=&net_state=4&device=&build=&os_version=&ak=×tamp=&sign=",
+            "OK": 1
+        } 
+        """
+        json = r.json()
+        upos_uri = json['upos_uri']
+        endpoint = json['endpoint']
+        auth = json['auth']
+        biz_id = json['biz_id']
+        self.session.headers['X-Upos-Auth'] = auth  # add auth header
+        r = self.session.post('https:{}/{}?uploads&output=json'.format(endpoint, upos_uri.replace('upos://', '')))
+        # {"upload_id":"72eb747b9650b8c7995fdb0efbdc2bb6","key":"\/i181012ws2wg1tb7tjzswk2voxrwlk1u.mp4","OK":1,"bucket":"ugc"}
+        json = r.json()
+        upload_id = json['upload_id']
+
         with open(filepath, 'rb') as f:
             # 1M = 1024K = 1024 * 1024B
-            CHUNK_SIZE = 7 * 1024 * 1024
-            filesize = os.path.getsize(filepath)
+            CHUNK_SIZE = 4 * 1024 * 1024
             chunks_num = math.ceil(filesize / CHUNK_SIZE)
-            chunks_index = 0
+            chunks_index = -1
             while True:
                 chunks_data = f.read(CHUNK_SIZE)
                 if not chunks_data:
                     break
-                chunks_index += 1
-                file = [
-                    ('file'    , (filename, chunks_data            , 'video/mp4')),
-                    ('chunk'   , (None    , str(chunks_index)      , None       )),
-                    ('chunks'  , (None    , str(chunks_num)        , None       )),
-                    ('filesize', (None    , str(len(chunks_data))  , None       )),
-                    ('version' , (None    , '1.0.1'                , None       )),
-                    ('md5'     , (None    ,  utils.md5(chunks_data), None       )),
-                ]
-                r = self.session.post(url, files=file)
-                if re.search('504', r.text):
-                    chunks_index = 0
-                    f.seek(0, 0)
-                print(r.text, chunks_num, chunks_index)
+                chunks_index += 1  # start with 0
+                r = self.session.put('https:{endpoint}/{upos_uri}?'
+                                     'partNumber=1&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
+                                     .format(endpoint=endpoint,
+                                             upos_uri=upos_uri.replace('upos://', ''),
+                                             upload_id=upload_id,
+                                             chunk=chunks_index,
+                                             chunks=chunks_num,
+                                             size=filesize,
+                                             start=chunks_index * CHUNK_SIZE,
+                                             end=chunks_index * CHUNK_SIZE + len(chunks_data),
+                                             total=filesize,
+                                             ),
+                                     chunks_data,
+                                     headers={
+                                         'Content-Type': 'video/mp4',
+                                     }
+                                     )
+                print('{}/{}'.format(chunks_index, chunks_num), r.text)
 
-        r = self.session.post(url_complete,
-                              data={
-                                  'name'    : filename,
-                                  'chunks'  : chunks_num,
-                                  'filesize': filesize,
-                                  'csrf'    : self.csrf
-                              },
-                              headers={
-                                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-                              })
+        r = self.session.post('https:{endpoint}/{upos_uri}?'
+                              'output=json&name={name}&profile=ugcupos%2Fyb&uploadId={upload_id}&biz_id={biz_id}'
+                              .format(endpoint=endpoint,
+                                      upos_uri=upos_uri.replace('upos://', ''),
+                                      name=filename,
+                                      upload_id=upload_id,
+                                      biz_id=biz_id,
+                                      ),
+                              {"parts": [{"partNumber": 1, "eTag": "etag"}]}
+                              )
         print(r.text)
 
         # if source is empty, copyright=1, else copyright=2
@@ -167,11 +198,11 @@ class Bilibili:
                                   "order_id"  : 0,
                                   "videos"    : [{
                                       "desc"    : "",
-                                      "filename": url_filename,
+                                      "filename": upos_uri.replace('upos://ugc/i', '').split('.')[0],
                                       "title"   : ""
                                   }]}
                               )
-        print(r.content)
+        print(r.text)
 
     def addChannel(self, name, intro=''):
         """
