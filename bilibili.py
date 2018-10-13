@@ -151,13 +151,14 @@ class Bilibili:
                     break
                 chunks_index += 1  # start with 0
                 r = self.session.put('https:{endpoint}/{upos_uri}?'
-                                     'partNumber=1&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
+                                     'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
                                      .format(endpoint=endpoint,
                                              upos_uri=upos_uri.replace('upos://', ''),
+                                             part_number=chunks_index+1,  # starts with 1
                                              upload_id=upload_id,
                                              chunk=chunks_index,
                                              chunks=chunks_num,
-                                             size=filesize,
+                                             size=len(chunks_data),
                                              start=chunks_index * chunk_size,
                                              end=chunks_index * chunk_size + len(chunks_data),
                                              total=filesize,
