@@ -1,0 +1,22 @@
+bilibiliupload package
+======================
+
+Submodules
+----------
+
+bilibiliupload.bilibili module
+------------------------------
+
+.. automodule:: bilibiliupload.bilibili
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: bilibiliupload
+    :members:
+    :undoc-members:
+    :show-inheritance:

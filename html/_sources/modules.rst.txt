@@ -1,0 +1,7 @@
+bilibiliupload
+==============
+
+.. toctree::
+   :maxdepth: 4
+
+   bilibiliupload
