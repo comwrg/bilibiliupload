@@ -135,6 +135,7 @@ class Bilibili:
         endpoint = json['endpoint']
         auth = json['auth']
         biz_id = json['biz_id']
+        chunk_size = json['chunk_size']
         self.session.headers['X-Upos-Auth'] = auth  # add auth header
         r = self.session.post('https:{}/{}?uploads&output=json'.format(endpoint, upos_uri.replace('upos://', '')))
         # {"upload_id":"72eb747b9650b8c7995fdb0efbdc2bb6","key":"\/i181012ws2wg1tb7tjzswk2voxrwlk1u.mp4","OK":1,"bucket":"ugc"}
@@ -142,12 +143,10 @@ class Bilibili:
         upload_id = json['upload_id']
 
         with open(filepath, 'rb') as f:
-            # 1M = 1024K = 1024 * 1024B
-            CHUNK_SIZE = 4 * 1024 * 1024
-            chunks_num = math.ceil(filesize / CHUNK_SIZE)
+            chunks_num = math.ceil(filesize / chunk_size)
             chunks_index = -1
             while True:
-                chunks_data = f.read(CHUNK_SIZE)
+                chunks_data = f.read(chunk_size)
                 if not chunks_data:
                     break
                 chunks_index += 1  # start with 0
@@ -159,8 +158,8 @@ class Bilibili:
                                              chunk=chunks_index,
                                              chunks=chunks_num,
                                              size=filesize,
-                                             start=chunks_index * CHUNK_SIZE,
-                                             end=chunks_index * CHUNK_SIZE + len(chunks_data),
+                                             start=chunks_index * chunk_size,
+                                             end=chunks_index * chunk_size + len(chunks_data),
                                              total=filesize,
                                              ),
                                      chunks_data,
