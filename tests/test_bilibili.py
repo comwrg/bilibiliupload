@@ -1,8 +1,6 @@
-import os
-import re
 import random
 import unittest
-from bilibili import *
+from bilibiliupload import *
 
 USERNAME = ''
 PASSWORD = ''
