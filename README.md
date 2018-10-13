@@ -1,4 +1,6 @@
 # bilibiliupload
+[![image](https://img.shields.io/pypi/v/bilibiliupload.svg)](https://pypi.org/project/bilibiliupload/)
+
 Upload video to bilibili under command-line interface
 
 ## Installation
