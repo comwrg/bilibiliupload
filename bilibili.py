@@ -13,6 +13,12 @@ import base64
 import requests
 
 
+class VideoPart:
+    def __init__(self, path, title='', desc=''):
+        self.path = path
+        self.title = title
+        self.desc = desc
+
 class Bilibili:
     def __init__(self, cookie=None):
         self.session = requests.session()
@@ -78,7 +84,7 @@ class Bilibili:
             return r.json()
 
     def upload(self,
-               filepath,
+               parts,
                title,
                tid,
                tag,
@@ -89,8 +95,8 @@ class Bilibili:
                ):
         """
 
-        :param filepath: file path
-        :type filepath: str
+        :param parts: e.g. VideoPart('part title', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
+        :type parts: VideoPart or list<VideoPart>
         :param title: video's title
         :type title: str
         :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
@@ -107,65 +113,75 @@ class Bilibili:
         :type no_reprint: int
         """
 
-        filename = os.path.basename(filepath)
-        filesize = os.path.getsize(filepath)
-        r = self.session.get('https://member.bilibili.com/preupload?'
-                             'os=upos&upcdn=ws&name={name}&size={size}&r=upos&profile=ugcupos%2Fyb&ssl=0'
-                             .format(name=filename, size=filesize))
-        """return example
-        {
-            "upos_uri": "upos://ugc/i181012ws18x52mti3gg0h33chn3tyhp.mp4",
-            "biz_id": 58993125,
-            "endpoint": "//upos-hz-upcdnws.acgvideo.com",
-            "endpoints": [
-                "//upos-hz-upcdnws.acgvideo.com",
-                "//upos-hz-upcdntx.acgvideo.com"
-            ],
-            "chunk_retry_delay": 3,
-            "chunk_retry": 200,
-            "chunk_size": 4194304,
-            "threads": 2,
-            "timeout": 900,
-            "auth": "os=upos&cdn=upcdnws&uid=&net_state=4&device=&build=&os_version=&ak=×tamp=&sign=",
-            "OK": 1
-        } 
-        """
-        json = r.json()
-        upos_uri = json['upos_uri']
-        endpoint = json['endpoint']
-        auth = json['auth']
-        biz_id = json['biz_id']
-        chunk_size = json['chunk_size']
-        self.session.headers['X-Upos-Auth'] = auth  # add auth header
-        r = self.session.post('https:{}/{}?uploads&output=json'.format(endpoint, upos_uri.replace('upos://', '')))
-        # {"upload_id":"72eb747b9650b8c7995fdb0efbdc2bb6","key":"\/i181012ws2wg1tb7tjzswk2voxrwlk1u.mp4","OK":1,"bucket":"ugc"}
-        json = r.json()
-        upload_id = json['upload_id']
+        if not isinstance(parts, list):
+            parts = [parts]
 
-        with open(filepath, 'rb') as f:
-            chunks_num = math.ceil(filesize / chunk_size)
-            chunks_index = -1
-            while True:
-                chunks_data = f.read(chunk_size)
-                if not chunks_data:
-                    break
-                chunks_index += 1  # start with 0
-                r = self.session.put('https:{endpoint}/{upos_uri}?'
-                                     'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
-                                     .format(endpoint=endpoint,
-                                             upos_uri=upos_uri.replace('upos://', ''),
-                                             part_number=chunks_index+1,  # starts with 1
-                                             upload_id=upload_id,
-                                             chunk=chunks_index,
-                                             chunks=chunks_num,
-                                             size=len(chunks_data),
-                                             start=chunks_index * chunk_size,
-                                             end=chunks_index * chunk_size + len(chunks_data),
-                                             total=filesize,
-                                             ),
-                                     chunks_data,
-                                     )
-                print('{}/{}'.format(chunks_index, chunks_num), r.text)
+        videos = []
+        for part in parts:
+            filepath = part.path
+            filename = os.path.basename(filepath)
+            filesize = os.path.getsize(filepath)
+            r = self.session.get('https://member.bilibili.com/preupload?'
+                                 'os=upos&upcdn=ws&name={name}&size={size}&r=upos&profile=ugcupos%2Fyb&ssl=0'
+                                 .format(name=filename, size=filesize))
+            """return example
+            {
+                "upos_uri": "upos://ugc/i181012ws18x52mti3gg0h33chn3tyhp.mp4",
+                "biz_id": 58993125,
+                "endpoint": "//upos-hz-upcdnws.acgvideo.com",
+                "endpoints": [
+                    "//upos-hz-upcdnws.acgvideo.com",
+                    "//upos-hz-upcdntx.acgvideo.com"
+                ],
+                "chunk_retry_delay": 3,
+                "chunk_retry": 200,
+                "chunk_size": 4194304,
+                "threads": 2,
+                "timeout": 900,
+                "auth": "os=upos&cdn=upcdnws&uid=&net_state=4&device=&build=&os_version=&ak=×tamp=&sign=",
+                "OK": 1
+            } 
+            """
+            json = r.json()
+            upos_uri = json['upos_uri']
+            endpoint = json['endpoint']
+            auth = json['auth']
+            biz_id = json['biz_id']
+            chunk_size = json['chunk_size']
+            self.session.headers['X-Upos-Auth'] = auth  # add auth header
+            r = self.session.post('https:{}/{}?uploads&output=json'.format(endpoint, upos_uri.replace('upos://', '')))
+            # {"upload_id":"72eb747b9650b8c7995fdb0efbdc2bb6","key":"\/i181012ws2wg1tb7tjzswk2voxrwlk1u.mp4","OK":1,"bucket":"ugc"}
+            json = r.json()
+            upload_id = json['upload_id']
+
+            with open(filepath, 'rb') as f:
+                chunks_num = math.ceil(filesize / chunk_size)
+                chunks_index = -1
+                while True:
+                    chunks_data = f.read(chunk_size)
+                    if not chunks_data:
+                        break
+                    chunks_index += 1  # start with 0
+                    r = self.session.put('https:{endpoint}/{upos_uri}?'
+                                         'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
+                                         .format(endpoint=endpoint,
+                                                 upos_uri=upos_uri.replace('upos://', ''),
+                                                 part_number=chunks_index+1,  # starts with 1
+                                                 upload_id=upload_id,
+                                                 chunk=chunks_index,
+                                                 chunks=chunks_num,
+                                                 size=len(chunks_data),
+                                                 start=chunks_index * chunk_size,
+                                                 end=chunks_index * chunk_size + len(chunks_data),
+                                                 total=filesize,
+                                                 ),
+                                         chunks_data,
+                                         )
+                    print('{}/{}'.format(chunks_index, chunks_num), r.text)
+
+            videos.append({'filename': upos_uri.replace('upos://ugc/', '').split('.')[0],
+                           'title'   : part.title,
+                           'desc'    : part.desc})
 
         # if source is empty, copyright=1, else copyright=2
         copyright = 2 if source else 1
@@ -181,11 +197,7 @@ class Bilibili:
                                   "cover"     : cover,
                                   "mission_id": 0,
                                   "order_id"  : 0,
-                                  "videos"    : [{
-                                      "desc"    : "",
-                                      "filename": upos_uri.replace('upos://ugc/', '').split('.')[0],
-                                      "title"   : ""
-                                  }]}
+                                  "videos"    : videos}
                               )
         print(r.text)
 

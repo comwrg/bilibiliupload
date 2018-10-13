@@ -2,7 +2,7 @@ import os
 import re
 import random
 import unittest
-from bilibili import Bilibili
+from bilibili import *
 
 USERNAME = ''
 PASSWORD = ''
@@ -23,7 +23,7 @@ class TestBilibili(unittest.TestCase):
             tid = 65
             tag = ['test', '测试']
             desc = 'desc, 描述'
-            b.upload(filepath, title, tid, tag, desc)
+            b.upload(VideoPart(filepath), title, tid, tag, desc)
 
 
 
