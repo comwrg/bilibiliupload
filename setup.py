@@ -1,4 +1,5 @@
 from setuptools import setup
+import bilibiliupload
 
 with open('requirements.txt') as f:
     requires = f.readlines()
@@ -8,7 +9,7 @@ with open('README.md') as f:
 
 setup(
     name='bilibiliupload',
-    version='0.1.0',
+    version=bilibiliupload.__version__,
     packages=['bilibiliupload'],
     url='https://github.com/comwrg/bilibiliupload',
     install_requires=requires,
