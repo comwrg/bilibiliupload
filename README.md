@@ -18,5 +18,5 @@ b.upload(...)
 More details see docs
 
 ## Docs
-Documentation: https://comwrg.github.io/bilibiliUpload
+Documentation: https://comwrg.github.io/bilibiliupload
 
