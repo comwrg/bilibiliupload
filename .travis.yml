@@ -1,0 +1,23 @@
+language: python
+python:
+  - "3.6"
+
+script:
+  - 
+
+before_deploy:
+  - pip install Sphinx
+  - cd docs/
+  - sphinx-apidoc -o ./source ../bilibiliupload
+  - make html
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: ./docs/build/html
+  on:
+    branch: master
+
+# vim: et:ts=2:sw=2:
