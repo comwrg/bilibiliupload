@@ -8,7 +8,6 @@
 import os
 import re
 import math
-import utils
 import base64
 import requests
 
