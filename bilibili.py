@@ -164,23 +164,8 @@ class Bilibili:
                                              total=filesize,
                                              ),
                                      chunks_data,
-                                     headers={
-                                         'Content-Type': 'video/mp4',
-                                     }
                                      )
                 print('{}/{}'.format(chunks_index, chunks_num), r.text)
-
-        r = self.session.post('https:{endpoint}/{upos_uri}?'
-                              'output=json&name={name}&profile=ugcupos%2Fyb&uploadId={upload_id}&biz_id={biz_id}'
-                              .format(endpoint=endpoint,
-                                      upos_uri=upos_uri.replace('upos://', ''),
-                                      name=filename,
-                                      upload_id=upload_id,
-                                      biz_id=biz_id,
-                                      ),
-                              {"parts": [{"partNumber": 1, "eTag": "etag"}]}
-                              )
-        print(r.text)
 
         # if source is empty, copyright=1, else copyright=2
         copyright = 2 if source else 1
