@@ -37,11 +37,140 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="bilibiliupload-bilibili-module">
-<h2>bilibiliupload.bilibili module<a class="headerlink" href="#bilibiliupload-bilibili-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-bilibiliupload.bilibili">
+<span id="bilibiliupload-bilibili-module"></span><h2>bilibiliupload.bilibili module<a class="headerlink" href="#module-bilibiliupload.bilibili" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">comwrg</td>
+</tr>
+<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">time:</th><td class="field-body">2017/06/09</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="bilibiliupload.bilibili.Bilibili">
+<em class="property">class </em><code class="descclassname">bilibiliupload.bilibili.</code><code class="descname">Bilibili</code><span class="sig-paren">(</span><em>cookie=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="bilibiliupload.bilibili.Bilibili.addChannel">
+<code class="descname">addChannel</code><span class="sig-paren">(</span><em>name</em>, <em>intro=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.addChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.addChannel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s name</li>
+<li><strong>intro</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s introduction</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bilibiliupload.bilibili.Bilibili.channel_addVideo">
+<code class="descname">channel_addVideo</code><span class="sig-paren">(</span><em>cid</em>, <em>aids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.channel_addVideo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.channel_addVideo" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – channel’s id</li>
+<li><strong>aids</strong> (<em>list&lt;int&gt;</em>) – videos’ id</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bilibiliupload.bilibili.Bilibili.cover_up">
+<code class="descname">cover_up</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.cover_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.cover_up" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>BufferedReader</em>) – img path or stream</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">img URL</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bilibiliupload.bilibili.Bilibili.login">
+<code class="descname">login</code><span class="sig-paren">(</span><em>user</em>, <em>pwd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.login" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<div class="last line-block">
+<div class="line">THE API IS NOT OFFICIAL API</div>
+<div class="line">DETAILS: <a class="reference external" href="https://api.kaaass.net/biliapi/docs/">https://api.kaaass.net/biliapi/docs/</a></div>
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – username</li>
+<li><strong>pwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – password</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">if success return True
+else return msg json</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bilibiliupload.bilibili.Bilibili.upload">
+<code class="descname">upload</code><span class="sig-paren">(</span><em>parts</em>, <em>title</em>, <em>tid</em>, <em>tag</em>, <em>desc</em>, <em>source=''</em>, <em>cover=''</em>, <em>no_reprint=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.upload" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parts</strong> (<a class="reference internal" href="#bilibiliupload.bilibili.VideoPart" title="bilibiliupload.bilibili.VideoPart"><em>VideoPart</em></a><em> or </em><em>list&lt;VideoPart&gt;</em>) – e.g. VideoPart(‘part title’, ‘part title’, ‘part desc’), or [VideoPart(…), VideoPart(…)]</li>
+<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – video’s title</li>
+<li><strong>tid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – video type, see: <a class="reference external" href="https://member.bilibili.com/x/web/archive/pre">https://member.bilibili.com/x/web/archive/pre</a></li>
+<li><strong>tag</strong> (<em>list&lt;str&gt;</em>) – video’s tag</li>
+<li><strong>desc</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – video’s description</li>
+<li><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) 转载地址</li>
+<li><strong>cover</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) cover’s URL, use method <em>cover_up</em> to get</li>
+<li><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="bilibiliupload.bilibili.VideoPart">
+<em class="property">class </em><code class="descclassname">bilibiliupload.bilibili.</code><code class="descname">VideoPart</code><span class="sig-paren">(</span><em>path</em>, <em>title=''</em>, <em>desc=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#VideoPart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.VideoPart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bilibiliupload.bilibili.main">
+<code class="descclassname">bilibiliupload.bilibili.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-bilibiliupload">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-bilibiliupload" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
