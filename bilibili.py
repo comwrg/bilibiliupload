@@ -198,7 +198,7 @@ class Bilibili:
                                   "order_id"  : 0,
                                   "videos"    : [{
                                       "desc"    : "",
-                                      "filename": upos_uri.replace('upos://ugc/i', '').split('.')[0],
+                                      "filename": upos_uri.replace('upos://ugc/', '').split('.')[0],
                                       "title"   : ""
                                   }]}
                               )
