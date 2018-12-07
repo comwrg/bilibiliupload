@@ -24,7 +24,6 @@ class VideoPart:
 class Bilibili:
     def __init__(self, cookie=None):
         self.session = requests.session()
-        self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         if cookie:
             self.session.headers["cookie"] = cookie
             self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
@@ -98,6 +97,7 @@ class Bilibili:
             r = requests.post(url, data=data)
             return r.text
 
+        self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         h, k = getkey()
         pwd = base64.b64encode(
                   rsa.encrypt(
@@ -187,6 +187,7 @@ class Bilibili:
         :type no_reprint: int
         """
 
+        self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
         if not isinstance(parts, list):
             parts = [parts]
 
