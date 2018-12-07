@@ -94,7 +94,7 @@ class Bilibili:
                ):
         """
 
-        :param parts: e.g. VideoPart('part title', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
+        :param parts: e.g. VideoPart('part path', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
         :type parts: VideoPart or list<VideoPart>
         :param title: video's title
         :type title: str
