@@ -45,9 +45,12 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">rsa</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
 
 
 <div class="viewcode-block" id="VideoPart"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.VideoPart">[docs]</a><span class="k">class</span> <span class="nc">VideoPart</span><span class="p">:</span>
@@ -59,6 +62,7 @@
 <div class="viewcode-block" id="Bilibili"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili">[docs]</a><span class="k">class</span> <span class="nc">Bilibili</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span>
         <span class="k">if</span> <span class="n">cookie</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;cookie&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;bili_jct=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -70,9 +74,6 @@
 
 <div class="viewcode-block" id="Bilibili.login"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.login">[docs]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">pwd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. warning::</span>
-<span class="sd">           | THE API IS NOT OFFICIAL API</span>
-<span class="sd">           | DETAILS: https://api.kaaass.net/biliapi/docs/</span>
 
 <span class="sd">        :param user: username</span>
 <span class="sd">        :type user: str</span>
@@ -81,44 +82,79 @@
 <span class="sd">        :return: if success return True</span>
 <span class="sd">                 else return msg json</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://api.kaaass.net/biliapi/user/login&#39;</span><span class="p">,</span>
-                <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s1">&#39;user&#39;</span>  <span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-                    <span class="s1">&#39;passwd&#39;</span><span class="p">:</span> <span class="n">pwd</span>
-                <span class="p">},</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s1">&#39;x-requested-with&#39;</span><span class="p">:</span> <span class="s1">&#39;XMLHttpRequest&#39;</span>
-                <span class="p">}</span>
+        <span class="n">APPKEY</span>    <span class="o">=</span> <span class="s1">&#39;1d8b6e7d45233436&#39;</span>
+        <span class="n">APPSECRET</span> <span class="o">=</span> <span class="s1">&#39;560c52ccd288fed045859ed18bffd973&#39;</span>
 
-        <span class="p">)</span>
-        <span class="c1"># {&quot;ts&quot;:1498361700,&quot;status&quot;:&quot;OK&quot;,&quot;mid&quot;:132604873,&quot;access_key&quot;:&quot;fb6c52162481d92a20875aca101ebe92&quot;,&quot;expires&quot;:1500953701}</span>
-        <span class="c1"># print(r.text)</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;OK&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">def</span> <span class="nf">md5</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+            <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">h</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 
-        <span class="n">access_key</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;access_key&#39;</span><span class="p">]</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://api.kaaass.net/biliapi/user/sso?access_key=&#39;</span> <span class="o">+</span> <span class="n">access_key</span><span class="p">,</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s1">&#39;x-requested-with&#39;</span><span class="p">:</span> <span class="s1">&#39;XMLHttpRequest&#39;</span>
-                <span class="p">}</span>
-        <span class="p">)</span>
-        <span class="c1"># {&quot;ts&quot;:1498361701,&quot;status&quot;:&quot;OK&quot;,&quot;cookie&quot;:&quot;sid=4jj9426i; DedeUserID=132604873; DedeUserID__ckMd5=e6a58ccc06aec8f8; SESSDATA=4de5769d%2C1498404903%2Cd86e4dea; bili_jct=5114b3630514ab72df2cb2e7e6fcd2eb&quot;}</span>
-        <span class="c1"># print(r.text)</span>
+        <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">:</span>
-            <span class="n">cookie</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;cookie&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;cookie&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;bili_jct=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mid</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;DedeUserID=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Accept&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json, text/javascript, */*; q=0.01&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Referer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://space.bilibili.com/</span><span class="si">{mid}</span><span class="s1">/#!/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mid</span><span class="p">)</span>
-            <span class="c1"># session.headers[&#39;User-Agent&#39;] = &#39;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36&#39;</span>
-            <span class="c1"># session.headers[&#39;Content-Type&#39;] = &#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
+<span class="sd">            :return: return sign</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">md5</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">APPSECRET</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">signed_body</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: body which be added sign</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">body</span> <span class="o">+</span> <span class="s1">&#39;&amp;sign=&#39;</span> <span class="o">+</span> <span class="n">sign</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">ls</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">ls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+                <span class="n">body</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span><span class="p">(</span><span class="s1">&#39;&amp;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ls</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">body</span>
+
+        <span class="k">def</span> <span class="nf">getkey</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: hash, key</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="s1">&#39;https://passport.bilibili.com/api/oauth2/getKey&#39;</span><span class="p">,</span>
+                    <span class="n">signed_body</span><span class="p">({</span><span class="s1">&#39;appkey&#39;</span><span class="p">:</span> <span class="n">APPKEY</span><span class="p">}),</span>
+                 <span class="p">)</span>
+            <span class="c1"># {&quot;ts&quot;:1544152439,&quot;code&quot;:0,&quot;data&quot;:{&quot;hash&quot;:&quot;99c7573759582e0b&quot;,&quot;key&quot;:&quot;-----BEGIN PUBLIC----- -----END PUBLIC KEY-----\n&quot;}}</span>
+            <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+
+        <span class="n">h</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">getkey</span><span class="p">()</span>
+        <span class="n">pwd</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+                  <span class="n">rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+                      <span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="n">pwd</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                      <span class="n">rsa</span><span class="o">.</span><span class="n">PublicKey</span><span class="o">.</span><span class="n">load_pkcs1_openssl_pem</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+                  <span class="p">)</span>
+              <span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote_plus</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">pwd</span>  <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote_plus</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                <span class="s1">&#39;https://passport.bilibili.com/api/v2/oauth2/login&#39;</span><span class="p">,</span>
+                <span class="n">signed_body</span><span class="p">(</span><span class="s1">&#39;appkey=</span><span class="si">{appkey}</span><span class="s1">&amp;password=</span><span class="si">{password}</span><span class="s1">&amp;username=</span><span class="si">{username}</span><span class="s1">&#39;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="n">ls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;cookie_info&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]:</span>
+            <span class="n">ls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="s1">&#39;; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;cookie&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;bili_jct=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mid</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;DedeUserID=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Accept&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json, text/javascript, */*; q=0.01&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Referer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://space.bilibili.com/</span><span class="si">{mid}</span><span class="s1">/#!/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mid</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="Bilibili.upload"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.upload">[docs]</a>    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">parts</span><span class="p">,</span>
