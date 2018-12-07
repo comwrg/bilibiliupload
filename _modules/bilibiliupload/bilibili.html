@@ -83,6 +83,11 @@
 <span class="sd">                 else return msg json</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">APPKEY</span>    <span class="o">=</span> <span class="s1">&#39;1d8b6e7d45233436&#39;</span>
+        <span class="n">ACTIONKEY</span> <span class="o">=</span> <span class="s1">&#39;appkey&#39;</span>
+        <span class="n">BUILD</span>     <span class="o">=</span> <span class="mi">520001</span>
+        <span class="n">DEVICE</span>    <span class="o">=</span> <span class="s1">&#39;android&#39;</span>
+        <span class="n">MOBI_APP</span>  <span class="o">=</span> <span class="s1">&#39;android&#39;</span>
+        <span class="n">PLATFORM</span>  <span class="o">=</span> <span class="s1">&#39;android&#39;</span>
         <span class="n">APPSECRET</span> <span class="o">=</span> <span class="s1">&#39;560c52ccd288fed045859ed18bffd973&#39;</span>
 
         <span class="k">def</span> <span class="nf">md5</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -125,6 +130,12 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
 
+        <span class="k">def</span> <span class="nf">cnn_captcha</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://47.95.255.188:5000/code&quot;</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="n">img</span><span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+
         <span class="n">h</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">getkey</span><span class="p">()</span>
         <span class="n">pwd</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
                   <span class="n">rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
@@ -144,6 +155,28 @@
             <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">105</span><span class="p">:</span>
+            <span class="c1"># need captcha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;cookie&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;sid=xxxxxxxx&#39;</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://passport.bilibili.com/captcha&#39;</span><span class="p">)</span>
+            <span class="n">captcha</span> <span class="o">=</span> <span class="n">cnn_captcha</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+                    <span class="s1">&#39;https://passport.bilibili.com/api/v2/oauth2/login&#39;</span><span class="p">,</span>
+                    <span class="n">signed_body</span><span class="p">(</span><span class="s1">&#39;actionKey=</span><span class="si">{actionKey}</span><span class="s1">&amp;appkey=</span><span class="si">{appkey}</span><span class="s1">&amp;build=</span><span class="si">{build}</span><span class="s1">&amp;captcha=</span><span class="si">{captcha}</span><span class="s1">&amp;device=</span><span class="si">{device}</span><span class="s1">&#39;</span>
+                                <span class="s1">&#39;&amp;mobi_app=</span><span class="si">{mobi_app}</span><span class="s1">&amp;password=</span><span class="si">{password}</span><span class="s1">&amp;platform=</span><span class="si">{platform}</span><span class="s1">&amp;username=</span><span class="si">{username}</span><span class="s1">&#39;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">actionKey</span><span class="o">=</span><span class="n">ACTIONKEY</span><span class="p">,</span>
+                                        <span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span>
+                                        <span class="n">build</span><span class="o">=</span><span class="n">BUILD</span><span class="p">,</span>
+                                        <span class="n">captcha</span><span class="o">=</span><span class="n">captcha</span><span class="p">,</span>
+                                        <span class="n">device</span><span class="o">=</span><span class="n">DEVICE</span><span class="p">,</span>
+                                        <span class="n">mobi_app</span><span class="o">=</span><span class="n">MOBI_APP</span><span class="p">,</span>
+                                        <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">,</span>
+                                        <span class="n">platform</span><span class="o">=</span><span class="n">PLATFORM</span><span class="p">,</span>
+                                        <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">)),</span>
+                <span class="p">)</span>
+            <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
 
         <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
