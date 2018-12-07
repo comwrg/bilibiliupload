@@ -56,6 +56,11 @@ class Bilibili:
         )
         # {"ts":1498361700,"status":"OK","mid":132604873,"access_key":"fb6c52162481d92a20875aca101ebe92","expires":1500953701}
         # print(r.text)
+        try:
+            r.json()
+        except:
+            return r.text
+
         if r.json()['status'] != 'OK':
             return r.json()
 
