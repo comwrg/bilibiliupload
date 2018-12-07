@@ -140,7 +140,13 @@
                 <span class="n">signed_body</span><span class="p">(</span><span class="s1">&#39;appkey=</span><span class="si">{appkey}</span><span class="s1">&amp;password=</span><span class="si">{password}</span><span class="s1">&amp;username=</span><span class="si">{username}</span><span class="s1">&#39;</span>
                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">))</span>
             <span class="p">)</span>
-        <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
 
         <span class="n">ls</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;cookie_info&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]:</span>
