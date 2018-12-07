@@ -45,6 +45,11 @@ class Bilibili:
                  else return msg json
         """
         APPKEY    = '1d8b6e7d45233436'
+        ACTIONKEY = 'appkey'
+        BUILD     = 520001
+        DEVICE    = 'android'
+        MOBI_APP  = 'android'
+        PLATFORM  = 'android'
         APPSECRET = '560c52ccd288fed045859ed18bffd973'
 
         def md5(s):
@@ -87,6 +92,12 @@ class Bilibili:
             data = json['data']
             return data['hash'], data['key']
 
+        def cnn_captcha(img):
+            url = "http://47.95.255.188:5000/code"
+            data = {"image": img}
+            r = requests.post(url, data=data)
+            return r.text
+
         h, k = getkey()
         pwd = base64.b64encode(
                   rsa.encrypt(
@@ -106,6 +117,28 @@ class Bilibili:
             json = r.json()
         except:
             return r.text
+
+        if json['code'] == -105:
+            # need captcha
+            self.session.headers['cookie'] = 'sid=xxxxxxxx'
+            r = self.session.get('https://passport.bilibili.com/captcha')
+            captcha = cnn_captcha(base64.b64encode(r.content))
+            r = self.session.post(
+                    'https://passport.bilibili.com/api/v2/oauth2/login',
+                    signed_body('actionKey={actionKey}&appkey={appkey}&build={build}&captcha={captcha}&device={device}'
+                                '&mobi_app={mobi_app}&password={password}&platform={platform}&username={username}'
+                                .format(actionKey=ACTIONKEY,
+                                        appkey=APPKEY,
+                                        build=BUILD,
+                                        captcha=captcha,
+                                        device=DEVICE,
+                                        mobi_app=MOBI_APP,
+                                        password=pwd,
+                                        platform=PLATFORM,
+                                        username=user)),
+                )
+            json = r.json()
+
 
         if json['code'] is not 0:
             return r.text
