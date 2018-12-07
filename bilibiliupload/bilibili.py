@@ -254,6 +254,18 @@ class Bilibili:
                                          )
                     print('{}/{}'.format(chunks_index, chunks_num), r.text)
 
+                # NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769
+                self.session.post('https:{endpoint}/{upos_uri}?'
+                                  'output=json&name={name}&profile=ugcupos%2Fyb&uploadId={upload_id}&biz_id={biz_id}'
+                                  .format(endpoint=endpoint,
+                                          upos_uri=upos_uri.replace('upos://', ''),
+                                          name=filename,
+                                          upload_id=upload_id,
+                                          biz_id=biz_id,
+                                  ),
+                                  {"parts": [{"partNumber": i, "eTag": "etag"} for i in range(1, chunks_num+1)]},
+                )
+
             videos.append({'filename': upos_uri.replace('upos://ugc/', '').split('.')[0],
                            'title'   : part.title,
                            'desc'    : part.desc})
