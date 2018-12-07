@@ -102,7 +102,13 @@ class Bilibili:
                 signed_body('appkey={appkey}&password={password}&username={username}'
                             .format(appkey=APPKEY, username=user, password=pwd))
             )
-        json = r.json()
+        try:
+            json = r.json()
+        except:
+            return r.text
+
+        if json['code'] is not 0:
+            return r.text
 
         ls = []
         for item in json['data']['cookie_info']['cookies']:
