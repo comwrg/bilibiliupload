@@ -7,9 +7,12 @@
 
 import os
 import re
+import rsa
 import math
 import base64
+import hashlib
 import requests
+from urllib import parse
 
 
 class VideoPart:
@@ -21,6 +24,7 @@ class VideoPart:
 class Bilibili:
     def __init__(self, cookie=None):
         self.session = requests.session()
+        self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         if cookie:
             self.session.headers["cookie"] = cookie
             self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
@@ -32,9 +36,6 @@ class Bilibili:
 
     def login(self, user, pwd):
         """
-        .. warning::
-           | THE API IS NOT OFFICIAL API
-           | DETAILS: https://api.kaaass.net/biliapi/docs/
 
         :param user: username
         :type user: str
@@ -43,49 +44,79 @@ class Bilibili:
         :return: if success return True
                  else return msg json
         """
-        r = requests.post(
-                url='https://api.kaaass.net/biliapi/user/login',
-                data={
-                    'user'  : user,
-                    'passwd': pwd
-                },
-                headers={
-                    'x-requested-with': 'XMLHttpRequest'
-                }
+        APPKEY    = '1d8b6e7d45233436'
+        APPSECRET = '560c52ccd288fed045859ed18bffd973'
 
-        )
-        # {"ts":1498361700,"status":"OK","mid":132604873,"access_key":"fb6c52162481d92a20875aca101ebe92","expires":1500953701}
-        # print(r.text)
-        try:
-            r.json()
-        except:
-            return r.text
+        def md5(s):
+            h = hashlib.md5()
+            h.update(s.encode('utf-8'))
+            return h.hexdigest()
 
-        if r.json()['status'] != 'OK':
-            return r.json()
+        def sign(s):
+            """
 
-        access_key = r.json()['access_key']
-        r = requests.get(
-                url='https://api.kaaass.net/biliapi/user/sso?access_key=' + access_key,
-                headers={
-                    'x-requested-with': 'XMLHttpRequest'
-                }
-        )
-        # {"ts":1498361701,"status":"OK","cookie":"sid=4jj9426i; DedeUserID=132604873; DedeUserID__ckMd5=e6a58ccc06aec8f8; SESSDATA=4de5769d%2C1498404903%2Cd86e4dea; bili_jct=5114b3630514ab72df2cb2e7e6fcd2eb"}
-        # print(r.text)
+            :return: return sign
+            """
+            return md5(s + APPSECRET)
 
-        if r.json()['status'] == 'OK':
-            cookie = r.json()['cookie']
-            self.session.headers["cookie"] = cookie
-            self.csrf = re.search('bili_jct=(.*?);', cookie + ';').group(1)
-            self.mid = re.search('DedeUserID=(.*?);', cookie + ';').group(1)
-            self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
-            self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
-            # session.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'
-            # session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-            return True
-        else:
-            return r.json()
+        def signed_body(body):
+            """
+
+            :return: body which be added sign
+            """
+            if isinstance(body, str):
+                return body + '&sign=' + sign(body)
+            elif isinstance(body, dict):
+                ls = []
+                for k, v in body.items():
+                    ls.append(k + '=' + v)
+                body['sign'] = sign('&'.join(ls))
+                return body
+
+        def getkey():
+            """
+
+            :return: hash, key
+            """
+            r = self.session.post(
+                    'https://passport.bilibili.com/api/oauth2/getKey',
+                    signed_body({'appkey': APPKEY}),
+                 )
+            # {"ts":1544152439,"code":0,"data":{"hash":"99c7573759582e0b","key":"-----BEGIN PUBLIC----- -----END PUBLIC KEY-----\n"}}
+            json = r.json()
+            data = json['data']
+            return data['hash'], data['key']
+
+        h, k = getkey()
+        pwd = base64.b64encode(
+                  rsa.encrypt(
+                      (h + pwd).encode('utf-8'),
+                      rsa.PublicKey.load_pkcs1_openssl_pem(k.encode())
+                  )
+              )
+        user = parse.quote_plus(user)
+        pwd  = parse.quote_plus(pwd)
+
+        r = self.session.post(
+                'https://passport.bilibili.com/api/v2/oauth2/login',
+                signed_body('appkey={appkey}&password={password}&username={username}'
+                            .format(appkey=APPKEY, username=user, password=pwd))
+            )
+        json = r.json()
+
+        ls = []
+        for item in json['data']['cookie_info']['cookies']:
+            ls.append(item['name'] + '=' + item['value'])
+        cookie = '; '.join(ls)
+        self.session.headers["cookie"] = cookie
+
+        self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
+        self.mid = re.search('DedeUserID=(.*?);', cookie).group(1)
+        self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
+        self.session.headers['Referer'] = 'https://space.bilibili.com/{mid}/#!/'.format(mid=self.mid)
+
+        return True
+
 
     def upload(self,
                parts,
