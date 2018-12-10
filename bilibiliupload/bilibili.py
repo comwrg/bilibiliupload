@@ -173,7 +173,8 @@ class Bilibili:
         :type parts: VideoPart or list<VideoPart>
         :param title: video's title
         :type title: str
-        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
+        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre 
+                                  or https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8
         :type tid: int
         :param tag: video's tag
         :type tag: list<str>
