@@ -298,11 +298,11 @@ class Bilibili:
         :type intro: str
         """
         r = self.session.post(
-                url='https://space.bilibili.com/ajax/channel/addChannel',
+                url='https://api.bilibili.com/x/space/channel/add',
                 data={
                     'name' : name,
                     'intro': intro,
-                    'aids' : '',
+                    'jsonp' : 'jsonp',
                     'csrf' : self.csrf,
                 },
                 # name=123&intro=123&aids=&csrf=565d7ed17cef2cc8ad054210c4e64324&_=1497077610768
