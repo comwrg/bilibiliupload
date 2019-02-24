@@ -13,6 +13,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
@@ -336,11 +337,11 @@
 <span class="sd">        :type intro: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://space.bilibili.com/ajax/channel/addChannel&#39;</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://api.bilibili.com/x/space/channel/add&#39;</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                     <span class="s1">&#39;name&#39;</span> <span class="p">:</span> <span class="n">name</span><span class="p">,</span>
                     <span class="s1">&#39;intro&#39;</span><span class="p">:</span> <span class="n">intro</span><span class="p">,</span>
-                    <span class="s1">&#39;aids&#39;</span> <span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;jsonp&#39;</span> <span class="p">:</span> <span class="s1">&#39;jsonp&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;csrf&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="c1"># name=123&amp;intro=123&amp;aids=&amp;csrf=565d7ed17cef2cc8ad054210c4e64324&amp;_=1497077610768</span>
@@ -438,7 +439,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, comwrg.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.
     </div>
   </body>
 </html>
