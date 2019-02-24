@@ -361,7 +361,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://space.bilibili.com/ajax/channel/addVideo&#39;</span><span class="p">,</span>
+                <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://api.bilibili.com/x/space/channel/video/add&#39;</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                     <span class="s1">&#39;aids&#39;</span><span class="p">:</span> <span class="s1">&#39;%2C&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aids</span><span class="p">),</span>
                     <span class="s1">&#39;cid&#39;</span> <span class="p">:</span> <span class="n">cid</span><span class="p">,</span>
