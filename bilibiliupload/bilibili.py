@@ -322,7 +322,7 @@ class Bilibili:
         """
 
         r = self.session.post(
-                url='https://space.bilibili.com/ajax/channel/addVideo',
+                url='https://api.bilibili.com/x/space/channel/video/add',
                 data={
                     'aids': '%2C'.join(aids),
                     'cid' : cid,
