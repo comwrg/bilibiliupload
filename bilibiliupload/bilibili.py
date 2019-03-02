@@ -163,11 +163,11 @@ class Bilibili:
                tid,
                tag,
                desc,
-               dtime,
                source='',
                cover='',
                no_reprint=1,
-               open_elec=1
+               dtime=None,
+               open_elec=1,
                ):
         """
 
@@ -182,7 +182,7 @@ class Bilibili:
         :type tag: list<str>
         :param desc: video's description
         :type desc: str
-        :param dtime: publish date timestamp
+        :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
         :type dtime: int
         :param source: (optional) 转载地址
         :type source: str
