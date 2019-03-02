@@ -202,11 +202,11 @@
                <span class="n">tid</span><span class="p">,</span>
                <span class="n">tag</span><span class="p">,</span>
                <span class="n">desc</span><span class="p">,</span>
-               <span class="n">dtime</span><span class="p">,</span>
                <span class="n">source</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">cover</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">no_reprint</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-               <span class="n">open_elec</span><span class="o">=</span><span class="mi">1</span>
+               <span class="n">dtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">open_elec</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -221,7 +221,7 @@
 <span class="sd">        :type tag: list&lt;str&gt;</span>
 <span class="sd">        :param desc: video&#39;s description</span>
 <span class="sd">        :type desc: str</span>
-<span class="sd">        :param dtime: publish date timestamp</span>
+<span class="sd">        :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</span>
 <span class="sd">        :type dtime: int</span>
 <span class="sd">        :param source: (optional) 转载地址</span>
 <span class="sd">        :type source: str</span>
