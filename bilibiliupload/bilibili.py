@@ -163,9 +163,11 @@ class Bilibili:
                tid,
                tag,
                desc,
+               dtime,
                source='',
                cover='',
                no_reprint=1,
+               open_elec=1
                ):
         """
 
@@ -180,12 +182,16 @@ class Bilibili:
         :type tag: list<str>
         :param desc: video's description
         :type desc: str
+        :param dtime: publish date timestamp
+        :type dtime: int
         :param source: (optional) 转载地址
         :type source: str
         :param cover: (optional) cover's URL, use method *cover_up* to get
         :type cover: str
         :param no_reprint: (optional) 0=可以转载, 1=禁止转载(default)
         :type no_reprint: int
+        :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
+        :type open_elec: int
         """
 
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -285,7 +291,9 @@ class Bilibili:
                                   "cover"     : cover,
                                   "mission_id": 0,
                                   "order_id"  : 0,
-                                  "videos"    : videos}
+                                  "videos"    : videos,
+                                  "dtime"     : dtime,
+                                  "open_elec" : open_elec}
                               )
         print(r.text)
 
