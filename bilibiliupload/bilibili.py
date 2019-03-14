@@ -181,7 +181,7 @@ class Bilibili:
         :param tag: video's tag
         :type tag: list<str>
         :param desc: video's description
-        :type desc: str
+        :type desc: str 注: 最大长度 250，超过长度B站服务器会报错
         :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
         :type dtime: int
         :param source: (optional) 转载地址
