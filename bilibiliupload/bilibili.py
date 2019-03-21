@@ -244,22 +244,28 @@ class Bilibili:
                     if not chunks_data:
                         break
                     chunks_index += 1  # start with 0
-                    r = self.session.put('https:{endpoint}/{upos_uri}?'
-                                         'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
-                                         .format(endpoint=endpoint,
-                                                 upos_uri=upos_uri.replace('upos://', ''),
-                                                 part_number=chunks_index+1,  # starts with 1
-                                                 upload_id=upload_id,
-                                                 chunk=chunks_index,
-                                                 chunks=chunks_num,
-                                                 size=len(chunks_data),
-                                                 start=chunks_index * chunk_size,
-                                                 end=chunks_index * chunk_size + len(chunks_data),
-                                                 total=filesize,
-                                                 ),
-                                         chunks_data,
-                                         )
-                    print('{}/{}'.format(chunks_index, chunks_num), r.text)
+                    max_retry_times = 3
+                    part_upload_status = ''
+                    # retry when sigle part file upload failed
+                    while bool(max_retry_times) and part_upload_status != 'MULTIPART_PUT_SUCCESS':
+                        max_retry_times -= 1
+                        r = self.session.put('https:{endpoint}/{upos_uri}?'
+                                            'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
+                                            .format(endpoint=endpoint,
+                                                    upos_uri=upos_uri.replace('upos://', ''),
+                                                    part_number=chunks_index+1,  # starts with 1
+                                                    upload_id=upload_id,
+                                                    chunk=chunks_index,
+                                                    chunks=chunks_num,
+                                                    size=len(chunks_data),
+                                                    start=chunks_index * chunk_size,
+                                                    end=chunks_index * chunk_size + len(chunks_data),
+                                                    total=filesize,
+                                                    ),
+                                            chunks_data,
+                                            )
+                        part_upload_status = r.text
+                        print('{}/{}'.format(chunks_index, chunks_num), r.text)
 
                 # NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769
                 self.session.post('https:{endpoint}/{upos_uri}?'
