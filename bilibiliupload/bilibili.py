@@ -205,7 +205,7 @@ class Bilibili:
             filesize = os.path.getsize(filepath)
             r = self.session.get('https://member.bilibili.com/preupload?'
                                  'os=upos&upcdn=ws&name={name}&size={size}&r=upos&profile=ugcupos%2Fyb&ssl=0'
-                                 .format(name=filename, size=filesize))
+                                 .format(name=parse.quote_plus(filename), size=filesize))
             """return example
             {
                 "upos_uri": "upos://ugc/i181012ws18x52mti3gg0h33chn3tyhp.mp4",
