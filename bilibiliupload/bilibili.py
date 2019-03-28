@@ -169,7 +169,7 @@ class Bilibili:
                no_reprint=1,
                dtime=None,
                open_elec=1,
-               max_retry = 5,
+               max_retry=5,
                ):
         """
 
@@ -194,6 +194,8 @@ class Bilibili:
         :type no_reprint: int
         :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
         :type open_elec: int
+        :param max_retry: (optional) max retry times per chunk
+        :type max_retry: int
         """
 
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -246,11 +248,8 @@ class Bilibili:
                     if not chunks_data:
                         break
                     chunks_index += 1  # start with 0
-                    retries = max_retry
-                    part_upload_status_code = 0
-                    # retry when sigle part file upload failed
-                    while bool(retries) and part_upload_status_code != 200:
-                        retries -= 1
+
+                    def upload_chunk():
                         r = self.session.put('https:{endpoint}/{upos_uri}?'
                                             'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
                                             .format(endpoint=endpoint,
@@ -266,13 +265,24 @@ class Bilibili:
                                                     ),
                                             chunks_data,
                                             )
-                        part_upload_status_code = r.status_code
+                        return r
+
+                    def retry_upload_chunk():
+                        """return :class:`Response` if upload success, else return None."""
+                        for i in range(max_retry):
+                            r = upload_chunk()
+                            if r.status_code == 200:
+                                return r
+                            print('{}/{} retry stage {}/{}'.format(chunks_index, chunks_num, i, max_retry), r.text)
+                            time.sleep(5 * i)
+                        return None
+
+                    r = retry_upload_chunk()
+                    if r:
                         print('{}/{}'.format(chunks_index, chunks_num), r.text)
-                        if r.status_code != 200:
-                            print('{}/{} retry stage {}/{}'.format(chunks_index, chunks_num, max_retry - retries, max_retry), r.text)
-                            time.sleep(5 * (max_retry - retries))
-                    if retries == 0 and part_upload_status_code != 200:
+                    else:
                         raise Exception('upload reach max retry times at part {}/{}'.format(chunks_index, chunks_num))
+
                 # NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769
                 self.session.post('https:{endpoint}/{upos_uri}?'
                                   'output=json&name={name}&profile=ugcupos%2Fyb&uploadId={upload_id}&biz_id={biz_id}'
