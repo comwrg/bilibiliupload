@@ -13,6 +13,7 @@ import base64
 import hashlib
 import requests
 from urllib import parse
+import time
 
 
 class VideoPart:
@@ -168,6 +169,7 @@ class Bilibili:
                no_reprint=1,
                dtime=None,
                open_elec=1,
+               max_retry=5,
                ):
         """
 
@@ -192,6 +194,8 @@ class Bilibili:
         :type no_reprint: int
         :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
         :type open_elec: int
+        :param max_retry: (optional) max retry times per chunk
+        :type max_retry: int
         """
 
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
@@ -244,22 +248,40 @@ class Bilibili:
                     if not chunks_data:
                         break
                     chunks_index += 1  # start with 0
-                    r = self.session.put('https:{endpoint}/{upos_uri}?'
-                                         'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
-                                         .format(endpoint=endpoint,
-                                                 upos_uri=upos_uri.replace('upos://', ''),
-                                                 part_number=chunks_index+1,  # starts with 1
-                                                 upload_id=upload_id,
-                                                 chunk=chunks_index,
-                                                 chunks=chunks_num,
-                                                 size=len(chunks_data),
-                                                 start=chunks_index * chunk_size,
-                                                 end=chunks_index * chunk_size + len(chunks_data),
-                                                 total=filesize,
-                                                 ),
-                                         chunks_data,
-                                         )
-                    print('{}/{}'.format(chunks_index, chunks_num), r.text)
+
+                    def upload_chunk():
+                        r = self.session.put('https:{endpoint}/{upos_uri}?'
+                                            'partNumber={part_number}&uploadId={upload_id}&chunk={chunk}&chunks={chunks}&size={size}&start={start}&end={end}&total={total}'
+                                            .format(endpoint=endpoint,
+                                                    upos_uri=upos_uri.replace('upos://', ''),
+                                                    part_number=chunks_index+1,  # starts with 1
+                                                    upload_id=upload_id,
+                                                    chunk=chunks_index,
+                                                    chunks=chunks_num,
+                                                    size=len(chunks_data),
+                                                    start=chunks_index * chunk_size,
+                                                    end=chunks_index * chunk_size + len(chunks_data),
+                                                    total=filesize,
+                                                    ),
+                                            chunks_data,
+                                            )
+                        return r
+
+                    def retry_upload_chunk():
+                        """return :class:`Response` if upload success, else return None."""
+                        for i in range(max_retry):
+                            r = upload_chunk()
+                            if r.status_code == 200:
+                                return r
+                            print('{}/{} retry stage {}/{}'.format(chunks_index, chunks_num, i, max_retry), r.text)
+                            time.sleep(5 * i)
+                        return None
+
+                    r = retry_upload_chunk()
+                    if r:
+                        print('{}/{}'.format(chunks_index, chunks_num), r.text)
+                    else:
+                        raise Exception('upload reach max retry times at part {}/{}'.format(chunks_index, chunks_num))
 
                 # NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769
                 self.session.post('https:{endpoint}/{upos_uri}?'
