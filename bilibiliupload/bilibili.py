@@ -13,6 +13,7 @@ import base64
 import hashlib
 import requests
 from urllib import parse
+from functools import reduce
 
 
 class VideoPart:
@@ -259,7 +260,12 @@ class Bilibili:
                                                  ),
                                          chunks_data,
                                          )
-                    print('{}/{}'.format(chunks_index, chunks_num), r.text)
+                
+                    currentPercentage = int(chunks_index*100/chunks_num)
+                    progresssbar = (['#' for i in range(currentPercentage//2)]+ [' ' for i in range(50-currentPercentage//2)])
+                    progresssbar = reduce(lambda x, y : x + y, progresssbar)
+                    print(" \r{:2}% [{}] {}/{}".format(currentPercentage, progresssbar, chunks_index, chunks_num), end='')
+                    # print('{}/{}'.format(chunks_index, chunks_num), r.text)
 
                 # NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769
                 self.session.post('https:{endpoint}/{upos_uri}?'
