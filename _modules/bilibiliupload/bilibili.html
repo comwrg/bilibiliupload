@@ -52,6 +52,7 @@
 <span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 
 <div class="viewcode-block" id="VideoPart"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.VideoPart">[docs]</a><span class="k">class</span> <span class="nc">VideoPart</span><span class="p">:</span>
@@ -207,6 +208,7 @@
                <span class="n">no_reprint</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                <span class="n">dtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">open_elec</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">max_retry</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -231,6 +233,8 @@
 <span class="sd">        :type no_reprint: int</span>
 <span class="sd">        :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止</span>
 <span class="sd">        :type open_elec: int</span>
+<span class="sd">        :param max_retry: (optional) max retry times per chunk</span>
+<span class="sd">        :type max_retry: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json; charset=utf-8&#39;</span>
@@ -283,22 +287,40 @@
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">chunks_data</span><span class="p">:</span>
                         <span class="k">break</span>
                     <span class="n">chunks_index</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># start with 0</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;https:</span><span class="si">{endpoint}</span><span class="s1">/</span><span class="si">{upos_uri}</span><span class="s1">?&#39;</span>
-                                         <span class="s1">&#39;partNumber=</span><span class="si">{part_number}</span><span class="s1">&amp;uploadId=</span><span class="si">{upload_id}</span><span class="s1">&amp;chunk=</span><span class="si">{chunk}</span><span class="s1">&amp;chunks=</span><span class="si">{chunks}</span><span class="s1">&amp;size=</span><span class="si">{size}</span><span class="s1">&amp;start=</span><span class="si">{start}</span><span class="s1">&amp;end=</span><span class="si">{end}</span><span class="s1">&amp;total=</span><span class="si">{total}</span><span class="s1">&#39;</span>
-                                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
-                                                 <span class="n">upos_uri</span><span class="o">=</span><span class="n">upos_uri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;upos://&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
-                                                 <span class="n">part_number</span><span class="o">=</span><span class="n">chunks_index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># starts with 1</span>
-                                                 <span class="n">upload_id</span><span class="o">=</span><span class="n">upload_id</span><span class="p">,</span>
-                                                 <span class="n">chunk</span><span class="o">=</span><span class="n">chunks_index</span><span class="p">,</span>
-                                                 <span class="n">chunks</span><span class="o">=</span><span class="n">chunks_num</span><span class="p">,</span>
-                                                 <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks_data</span><span class="p">),</span>
-                                                 <span class="n">start</span><span class="o">=</span><span class="n">chunks_index</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">,</span>
-                                                 <span class="n">end</span><span class="o">=</span><span class="n">chunks_index</span> <span class="o">*</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks_data</span><span class="p">),</span>
-                                                 <span class="n">total</span><span class="o">=</span><span class="n">filesize</span><span class="p">,</span>
-                                                 <span class="p">),</span>
-                                         <span class="n">chunks_data</span><span class="p">,</span>
-                                         <span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+                    <span class="k">def</span> <span class="nf">upload_chunk</span><span class="p">():</span>
+                        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;https:</span><span class="si">{endpoint}</span><span class="s1">/</span><span class="si">{upos_uri}</span><span class="s1">?&#39;</span>
+                                            <span class="s1">&#39;partNumber=</span><span class="si">{part_number}</span><span class="s1">&amp;uploadId=</span><span class="si">{upload_id}</span><span class="s1">&amp;chunk=</span><span class="si">{chunk}</span><span class="s1">&amp;chunks=</span><span class="si">{chunks}</span><span class="s1">&amp;size=</span><span class="si">{size}</span><span class="s1">&amp;start=</span><span class="si">{start}</span><span class="s1">&amp;end=</span><span class="si">{end}</span><span class="s1">&amp;total=</span><span class="si">{total}</span><span class="s1">&#39;</span>
+                                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="n">endpoint</span><span class="p">,</span>
+                                                    <span class="n">upos_uri</span><span class="o">=</span><span class="n">upos_uri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;upos://&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+                                                    <span class="n">part_number</span><span class="o">=</span><span class="n">chunks_index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># starts with 1</span>
+                                                    <span class="n">upload_id</span><span class="o">=</span><span class="n">upload_id</span><span class="p">,</span>
+                                                    <span class="n">chunk</span><span class="o">=</span><span class="n">chunks_index</span><span class="p">,</span>
+                                                    <span class="n">chunks</span><span class="o">=</span><span class="n">chunks_num</span><span class="p">,</span>
+                                                    <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">chunks_data</span><span class="p">),</span>
+                                                    <span class="n">start</span><span class="o">=</span><span class="n">chunks_index</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">,</span>
+                                                    <span class="n">end</span><span class="o">=</span><span class="n">chunks_index</span> <span class="o">*</span> <span class="n">chunk_size</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks_data</span><span class="p">),</span>
+                                                    <span class="n">total</span><span class="o">=</span><span class="n">filesize</span><span class="p">,</span>
+                                                    <span class="p">),</span>
+                                            <span class="n">chunks_data</span><span class="p">,</span>
+                                            <span class="p">)</span>
+                        <span class="k">return</span> <span class="n">r</span>
+
+                    <span class="k">def</span> <span class="nf">retry_upload_chunk</span><span class="p">():</span>
+                        <span class="sd">&quot;&quot;&quot;return :class:`Response` if upload success, else return None.&quot;&quot;&quot;</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retry</span><span class="p">):</span>
+                            <span class="n">r</span> <span class="o">=</span> <span class="n">upload_chunk</span><span class="p">()</span>
+                            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                                <span class="k">return</span> <span class="n">r</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> retry stage </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">retry_upload_chunk</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;upload reach max retry times at part </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">))</span>
 
                 <span class="c1"># NOT DELETE! Refer to https://github.com/comwrg/bilibiliupload/issues/15#issuecomment-424379769</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https:</span><span class="si">{endpoint}</span><span class="s1">/</span><span class="si">{upos_uri}</span><span class="s1">?&#39;</span>
