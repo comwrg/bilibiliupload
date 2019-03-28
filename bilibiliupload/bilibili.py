@@ -296,6 +296,7 @@ class Bilibili:
                                   "open_elec" : open_elec}
                               )
         print(r.text)
+        return r.text
 
     def addChannel(self, name, intro=''):
         """
