@@ -1,12 +1,10 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>bilibiliupload package &#8212; bilibiliupload 0.1.3 documentation</title>
+    <meta charset="utf-8" />
+    <title>bilibiliupload package &#8212; bilibiliupload 0.1.4 documentation</title>
     <link rel="stylesheet" href="_static/traditional.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,7 +28,7 @@
         <li class="right" >
           <a href="modules.html" title="bilibiliupload"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">bilibiliupload 0.1.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">bilibiliupload 0.1.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">bilibiliupload</a> &#187;</li> 
       </ul>
     </div>  
@@ -47,18 +45,17 @@
 </div>
 <div class="section" id="module-bilibiliupload.bilibili">
 <span id="bilibiliupload-bilibili-module"></span><h2>bilibiliupload.bilibili module<a class="headerlink" href="#module-bilibiliupload.bilibili" title="Permalink to this headline">¶</a></h2>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">author:</th><td class="field-body">comwrg</td>
-</tr>
-<tr class="field-even field"><th class="field-name">license:</th><td class="field-body">MIT</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">time:</th><td class="field-body">2017/06/09</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>comwrg</p>
+</dd>
+<dt class="field-even">license</dt>
+<dd class="field-even"><p>MIT</p>
+</dd>
+<dt class="field-odd">time</dt>
+<dd class="field-odd"><p>2017/06/09</p>
+</dd>
+</dl>
 <dl class="class">
 <dt id="bilibiliupload.bilibili.Bilibili">
 <em class="property">class </em><code class="descclassname">bilibiliupload.bilibili.</code><code class="descname">Bilibili</code><span class="sig-paren">(</span><em>cookie=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili" title="Permalink to this definition">¶</a></dt>
@@ -66,98 +63,80 @@
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.addChannel">
 <code class="descname">addChannel</code><span class="sig-paren">(</span><em>name</em>, <em>intro=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.addChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.addChannel" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s name</li>
-<li><strong>intro</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s introduction</li>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s name</p></li>
+<li><p><strong>intro</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s introduction</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.channel_addVideo">
 <code class="descname">channel_addVideo</code><span class="sig-paren">(</span><em>cid</em>, <em>aids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.channel_addVideo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.channel_addVideo" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>cid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – channel’s id</li>
-<li><strong>aids</strong> (<em>list&lt;int&gt;</em>) – videos’ id</li>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – channel’s id</p></li>
+<li><p><strong>aids</strong> (<em>list&lt;int&gt;</em>) – videos’ id</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.cover_up">
 <code class="descname">cover_up</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.cover_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.cover_up" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>BufferedReader</em>) – img path or stream</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">img URL</td>
-</tr>
-</tbody>
-</table>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>img</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em> or </em><em>BufferedReader</em>) – img path or stream</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>img URL</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.login">
 <code class="descname">login</code><span class="sig-paren">(</span><em>user</em>, <em>pwd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.login" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – username</li>
-<li><strong>pwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – password</li>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – username</p></li>
+<li><p><strong>pwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – password</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">if success return True
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if success return True
 else return msg json</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.upload">
 <code class="descname">upload</code><span class="sig-paren">(</span><em>parts</em>, <em>title</em>, <em>tid</em>, <em>tag</em>, <em>desc</em>, <em>source=''</em>, <em>cover=''</em>, <em>no_reprint=1</em>, <em>dtime=None</em>, <em>open_elec=1</em>, <em>max_retry=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.upload" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>parts</strong> (<a class="reference internal" href="#bilibiliupload.bilibili.VideoPart" title="bilibiliupload.bilibili.VideoPart"><em>VideoPart</em></a><em> or </em><em>list&lt;VideoPart&gt;</em>) – e.g. VideoPart(‘part path’, ‘part title’, ‘part desc’), or [VideoPart(…), VideoPart(…)]</li>
-<li><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – video’s title</li>
-<li><strong>tid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – video type, see: <a class="reference external" href="https://member.bilibili.com/x/web/archive/pre">https://member.bilibili.com/x/web/archive/pre</a> 
-or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8">https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8</a></li>
-<li><strong>tag</strong> (<em>list&lt;str&gt;</em>) – video’s tag</li>
-<li><strong>desc</strong> (<em>str 注: 最大长度 250，超过长度B站服务器会报错</em>) – video’s description</li>
-<li><strong>dtime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</li>
-<li><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) 转载地址</li>
-<li><strong>cover</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) cover’s URL, use method <em>cover_up</em> to get</li>
-<li><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</li>
-<li><strong>open_elec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 1=启用充电面板(默认) 0=禁止</li>
-<li><strong>max_retry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) max retry times per chunk</li>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parts</strong> (<a class="reference internal" href="#bilibiliupload.bilibili.VideoPart" title="bilibiliupload.bilibili.VideoPart"><em>VideoPart</em></a><em> or </em><em>list&lt;VideoPart&gt;</em>) – e.g. VideoPart(‘part path’, ‘part title’, ‘part desc’), or [VideoPart(…), VideoPart(…)]</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – video’s title</p></li>
+<li><p><strong>tid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – video type, see: <a class="reference external" href="https://member.bilibili.com/x/web/archive/pre">https://member.bilibili.com/x/web/archive/pre</a> 
+or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8">https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8</a></p></li>
+<li><p><strong>tag</strong> (<em>list&lt;str&gt;</em>) – video’s tag</p></li>
+<li><p><strong>desc</strong> (<em>str 注: 最大长度 250，超过长度B站服务器会报错</em>) – video’s description</p></li>
+<li><p><strong>dtime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</p></li>
+<li><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) 转载地址</p></li>
+<li><p><strong>cover</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) cover’s URL, use method <em>cover_up</em> to get</p></li>
+<li><p><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</p></li>
+<li><p><strong>open_elec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 1=启用充电面板(默认) 0=禁止</p></li>
+<li><p><strong>max_retry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) max retry times per chunk</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -211,8 +190,6 @@ or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -233,13 +210,13 @@ or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki
         <li class="right" >
           <a href="modules.html" title="bilibiliupload"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">bilibiliupload 0.1.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">bilibiliupload 0.1.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >bilibiliupload</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, comwrg.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0.
     </div>
   </body>
 </html>
