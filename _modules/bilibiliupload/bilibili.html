@@ -338,23 +338,43 @@
 
         <span class="c1"># if source is empty, copyright=1, else copyright=2</span>
         <span class="n">copyright</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">source</span> <span class="k">else</span> <span class="mi">1</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://member.bilibili.com/x/vu/web/add?csrf=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
-                              <span class="n">json</span><span class="o">=</span><span class="p">{</span>
-                                  <span class="s2">&quot;copyright&quot;</span> <span class="p">:</span> <span class="n">copyright</span><span class="p">,</span>
-                                  <span class="s2">&quot;source&quot;</span>    <span class="p">:</span> <span class="n">source</span><span class="p">,</span>
-                                  <span class="s2">&quot;title&quot;</span>     <span class="p">:</span> <span class="n">title</span><span class="p">,</span>
-                                  <span class="s2">&quot;tid&quot;</span>       <span class="p">:</span> <span class="n">tid</span><span class="p">,</span>
-                                  <span class="s2">&quot;tag&quot;</span>       <span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tag</span><span class="p">),</span>
-                                  <span class="s2">&quot;no_reprint&quot;</span><span class="p">:</span> <span class="n">no_reprint</span><span class="p">,</span>
-                                  <span class="s2">&quot;desc&quot;</span>      <span class="p">:</span> <span class="n">desc</span><span class="p">,</span>
-                                  <span class="s2">&quot;cover&quot;</span>     <span class="p">:</span> <span class="n">cover</span><span class="p">,</span>
-                                  <span class="s2">&quot;mission_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                                  <span class="s2">&quot;order_id&quot;</span>  <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                                  <span class="s2">&quot;videos&quot;</span>    <span class="p">:</span> <span class="n">videos</span><span class="p">,</span>
-                                  <span class="s2">&quot;dtime&quot;</span>     <span class="p">:</span> <span class="n">dtime</span><span class="p">,</span>
-                                  <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span><span class="p">}</span>
-                              <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
+        <span class="k">def</span> <span class="nf">add</span><span class="p">():</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://member.bilibili.com/x/vu/web/add?csrf=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
+                                  <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+                                      <span class="s2">&quot;copyright&quot;</span> <span class="p">:</span> <span class="n">copyright</span><span class="p">,</span>
+                                      <span class="s2">&quot;source&quot;</span>    <span class="p">:</span> <span class="n">source</span><span class="p">,</span>
+                                      <span class="s2">&quot;title&quot;</span>     <span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                                      <span class="s2">&quot;tid&quot;</span>       <span class="p">:</span> <span class="n">tid</span><span class="p">,</span>
+                                      <span class="s2">&quot;tag&quot;</span>       <span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tag</span><span class="p">),</span>
+                                      <span class="s2">&quot;no_reprint&quot;</span><span class="p">:</span> <span class="n">no_reprint</span><span class="p">,</span>
+                                      <span class="s2">&quot;desc&quot;</span>      <span class="p">:</span> <span class="n">desc</span><span class="p">,</span>
+                                      <span class="s2">&quot;cover&quot;</span>     <span class="p">:</span> <span class="n">cover</span><span class="p">,</span>
+                                      <span class="s2">&quot;mission_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                      <span class="s2">&quot;order_id&quot;</span>  <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                      <span class="s2">&quot;videos&quot;</span>    <span class="p">:</span> <span class="n">videos</span><span class="p">,</span>
+                                      <span class="s2">&quot;dtime&quot;</span>     <span class="p">:</span> <span class="n">dtime</span><span class="p">,</span>
+                                      <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span><span class="p">}</span>
+                                  <span class="p">)</span>
+            <span class="k">return</span> <span class="n">r</span>
+
+        <span class="k">def</span> <span class="nf">retry_add</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_retry</span><span class="p">):</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">add</span><span class="p">()</span>
+                <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">r</span>
+                <span class="c1"># {&quot;code&quot;:20001,&quot;message&quot;:&quot;投稿服务异常&quot;,&quot;ttl&quot;:1}</span>
+                <span class="k">if</span> <span class="n">code</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">20001</span><span class="p">,</span> <span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;retry add video </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Fail to add video, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Add video reach max retry times.&#39;</span><span class="p">)</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">retry_add</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Bilibili.addChannel"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.addChannel">[docs]</a>    <span class="k">def</span> <span class="nf">addChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">intro</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -465,7 +485,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, comwrg.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
     </div>
   </body>
 </html>
