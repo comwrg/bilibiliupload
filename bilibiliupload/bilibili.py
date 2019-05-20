@@ -301,23 +301,43 @@ class Bilibili:
 
         # if source is empty, copyright=1, else copyright=2
         copyright = 2 if source else 1
-        r = self.session.post('https://member.bilibili.com/x/vu/web/add?csrf=' + self.csrf,
-                              json={
-                                  "copyright" : copyright,
-                                  "source"    : source,
-                                  "title"     : title,
-                                  "tid"       : tid,
-                                  "tag"       : ','.join(tag),
-                                  "no_reprint": no_reprint,
-                                  "desc"      : desc,
-                                  "cover"     : cover,
-                                  "mission_id": 0,
-                                  "order_id"  : 0,
-                                  "videos"    : videos,
-                                  "dtime"     : dtime,
-                                  "open_elec" : open_elec}
-                              )
+        def add():
+            r = self.session.post('https://member.bilibili.com/x/vu/web/add?csrf=' + self.csrf,
+                                  json={
+                                      "copyright" : copyright,
+                                      "source"    : source,
+                                      "title"     : title,
+                                      "tid"       : tid,
+                                      "tag"       : ','.join(tag),
+                                      "no_reprint": no_reprint,
+                                      "desc"      : desc,
+                                      "cover"     : cover,
+                                      "mission_id": 0,
+                                      "order_id"  : 0,
+                                      "videos"    : videos,
+                                      "dtime"     : dtime,
+                                      "open_elec" : open_elec}
+                                  )
+            return r
+
+        def retry_add():
+            for i in range(max_retry):
+                r = add()
+                json = r.json()
+                code = json['code']
+                if code == 0:
+                    return r
+                # {"code":20001,"message":"投稿服务异常","ttl":1}
+                if code in (20001, ):
+                    print('retry add video {}/{}, {}'.format(i, max_retry, r.text))
+                else:
+                    raise Exception('Fail to add video, {}'.format(r.text))
+                time.sleep(5 * i)
+            raise Exception('Add video reach max retry times.')
+
+        r = retry_add()
         print(r.text)
+        return r.json()
 
     def addChannel(self, name, intro=''):
         """
