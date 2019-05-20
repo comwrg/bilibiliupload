@@ -17,6 +17,7 @@ setup(
     author='comwrg',
     author_email='xcomwrg@gmail.com',
     description='Upload video to bilibili under command-line interface',
+    long_description_content_type='text/markdown',
     long_description=readme,
     keywords=['bilibili', 'upload'],
     classifiers=[
