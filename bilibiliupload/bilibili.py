@@ -331,7 +331,7 @@ class Bilibili:
                 if code in (20001, ):
                     print('retry add video {}/{}, {}'.format(i, max_retry, r.text))
                 else:
-                    raise Exception('Fail to add video, {}'.format(r.text)
+                    raise Exception('Fail to add video, {}'.format(r.text))
                 time.sleep(5 * i)
             raise Exception('Add video reach max retry times.')
 
