@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>bilibiliupload.bilibili &#8212; bilibiliupload 0.1.6 documentation</title>
+    <title>bilibiliupload.bilibili &#8212; bilibiliupload 0.1.7 documentation</title>
     <link rel="stylesheet" href="../../_static/traditional.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">bilibiliupload 0.1.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">bilibiliupload 0.1.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -441,6 +441,7 @@
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span>
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://member.bilibili.com/x/vu/web/cover/up&#39;</span><span class="p">,</span>
                 <span class="n">data</span><span class="o">=</span><span class="p">{</span>
@@ -482,7 +483,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">bilibiliupload 0.1.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">bilibiliupload 0.1.7 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
