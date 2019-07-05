@@ -8,6 +8,7 @@
 
 import base64
 import hashlib
+import logging
 import math
 import os
 import re
@@ -18,6 +19,9 @@ import time
 from io import BufferedReader
 from typing import *
 from urllib import parse
+
+log = logging.getLogger(__name__)
+log.addHandler(logging.NullHandler())
 
 class VideoPart:
     def __init__(self, path, title='', desc=''):
@@ -120,6 +124,7 @@ class Bilibili:
                 signed_body('appkey={appkey}&password={password}&username={username}'
                             .format(appkey=APPKEY, username=user, password=pwd)),
         )
+        log.debug(r.text)
         json = r.json()
 
         if json['code'] == -105:
@@ -141,6 +146,7 @@ class Bilibili:
                                         platform=PLATFORM,
                                         username=user)),
             )
+            log.debug(r.text)
             json = r.json()
 
         if json['code'] != 0:
@@ -265,6 +271,7 @@ class Bilibili:
                                                     ),
                                             chunks_data,
                                             )
+                        log.debug(r.text)
                         return r
 
                     def retry_upload_chunk():
@@ -273,13 +280,15 @@ class Bilibili:
                             r = upload_chunk()
                             if r.status_code == 200:
                                 return r
-                            print('{}/{} retry stage {}/{}'.format(chunks_index, chunks_num, i, max_retry), r.text)
+                            log.info(r.text)
+                            log.info('{}/{} retry stage {}/{}'.format(chunks_index, chunks_num, i, max_retry))
+                            log.info('sleep %ds', 5 * i)
                             time.sleep(5 * i)
                         return None
 
                     r = retry_upload_chunk()
                     if r:
-                        print('{}/{}'.format(chunks_index, chunks_num), r.text)
+                        log.info('upload part {}/{}'.format(chunks_index, chunks_num))
                     else:
                         raise Exception('upload reach max retry times at part {}/{}'.format(chunks_index, chunks_num))
 
@@ -319,6 +328,7 @@ class Bilibili:
                                       "open_elec" : open_elec
                                   },
             )
+            log.debug(r.text)
             return r
 
         def retry_add():
@@ -330,14 +340,14 @@ class Bilibili:
                     return r
                 # {"code":20001,"message":"投稿服务异常","ttl":1}
                 if code in (20001, ):
-                    print('retry add video {}/{}, {}'.format(i, max_retry, r.text))
+                    log.info('retry add video {}/{}, {}'.format(i, max_retry, r.text))
                 else:
                     raise Exception('Fail to add video, {}'.format(r.text))
+                log.info('sleep %ds', 5 * i)
                 time.sleep(5 * i)
             raise Exception('Add video reach max retry times.')
 
         r = retry_add()
-        print(r.text)
         return r.json()
 
     def addChannel(self, name, intro=''):
@@ -361,7 +371,7 @@ class Bilibili:
         )
         # return
         # {"status":true,"data":{"cid":"15812"}}
-        print(r.json())
+        log.debug(r.text)
 
     def channel_addVideo(self, cid, aids):
         """
@@ -381,7 +391,7 @@ class Bilibili:
                 },
                 # aids=9953555%2C9872953&cid=15814&csrf=565d7ed17cef2cc8ad054210c4e64324&_=1497079332679
         )
-        print(r.json())
+        log.debug(r.text)
 
     def cover_up(self, img: Union[str, BufferedReader]):
         """
@@ -401,7 +411,7 @@ class Bilibili:
                     'csrf': self.csrf,
                 },
         )
-        # print(r.text)
         # {"code":0,"data":{"url":"http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg"},"message":"","ttl":1}
+        log.debug(r.text)
         return r.json()['data']['url']
 

@@ -19,6 +19,13 @@ b.upload(...)
 ```
 More details see docs
 
+## Why not log print
+```python
+import logging
+logging.basicConfig()
+```
+More details see python logger docs
+
 ## Docs
 Documentation: https://comwrg.github.io/bilibiliupload
 
