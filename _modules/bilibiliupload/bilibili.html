@@ -45,6 +45,7 @@
 
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -55,6 +56,9 @@
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BufferedReader</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">log</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
 
 <div class="viewcode-block" id="VideoPart"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.VideoPart">[docs]</a><span class="k">class</span> <span class="nc">VideoPart</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -157,6 +161,7 @@
                 <span class="n">signed_body</span><span class="p">(</span><span class="s1">&#39;appkey=</span><span class="si">{appkey}</span><span class="s1">&amp;password=</span><span class="si">{password}</span><span class="s1">&amp;username=</span><span class="si">{username}</span><span class="s1">&#39;</span>
                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">)),</span>
         <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">105</span><span class="p">:</span>
@@ -178,6 +183,7 @@
                                         <span class="n">platform</span><span class="o">=</span><span class="n">PLATFORM</span><span class="p">,</span>
                                         <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">)),</span>
             <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
             <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -302,6 +308,7 @@
                                                     <span class="p">),</span>
                                             <span class="n">chunks_data</span><span class="p">,</span>
                                             <span class="p">)</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">r</span>
 
                     <span class="k">def</span> <span class="nf">retry_upload_chunk</span><span class="p">():</span>
@@ -310,13 +317,15 @@
                             <span class="n">r</span> <span class="o">=</span> <span class="n">upload_chunk</span><span class="p">()</span>
                             <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
                                 <span class="k">return</span> <span class="n">r</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> retry stage </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> retry stage </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">))</span>
+                            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;sleep </span><span class="si">%d</span><span class="s1">s&#39;</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
                             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
                         <span class="k">return</span> <span class="kc">None</span>
 
                     <span class="n">r</span> <span class="o">=</span> <span class="n">retry_upload_chunk</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">),</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;upload part </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;upload reach max retry times at part </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunks_index</span><span class="p">,</span> <span class="n">chunks_num</span><span class="p">))</span>
 
@@ -356,6 +365,7 @@
                                       <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span>
                                   <span class="p">},</span>
             <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span>
 
         <span class="k">def</span> <span class="nf">retry_add</span><span class="p">():</span>
@@ -367,14 +377,14 @@
                     <span class="k">return</span> <span class="n">r</span>
                 <span class="c1"># {&quot;code&quot;:20001,&quot;message&quot;:&quot;投稿服务异常&quot;,&quot;ttl&quot;:1}</span>
                 <span class="k">if</span> <span class="n">code</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">20001</span><span class="p">,</span> <span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;retry add video </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;retry add video </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">max_retry</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Fail to add video, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;sleep </span><span class="si">%d</span><span class="s1">s&#39;</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Add video reach max retry times.&#39;</span><span class="p">)</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="n">retry_add</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Bilibili.addChannel"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.addChannel">[docs]</a>    <span class="k">def</span> <span class="nf">addChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">intro</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
@@ -398,7 +408,7 @@
         <span class="p">)</span>
         <span class="c1"># return</span>
         <span class="c1"># {&quot;status&quot;:true,&quot;data&quot;:{&quot;cid&quot;:&quot;15812&quot;}}</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Bilibili.channel_addVideo"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.channel_addVideo">[docs]</a>    <span class="k">def</span> <span class="nf">channel_addVideo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cid</span><span class="p">,</span> <span class="n">aids</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -418,7 +428,7 @@
                 <span class="p">},</span>
                 <span class="c1"># aids=9953555%2C9872953&amp;cid=15814&amp;csrf=565d7ed17cef2cc8ad054210c4e64324&amp;_=1497079332679</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Bilibili.cover_up"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.cover_up">[docs]</a>    <span class="k">def</span> <span class="nf">cover_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BufferedReader</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -438,8 +448,8 @@
                     <span class="s1">&#39;csrf&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
                 <span class="p">},</span>
         <span class="p">)</span>
-        <span class="c1"># print(r.text)</span>
         <span class="c1"># {&quot;code&quot;:0,&quot;data&quot;:{&quot;url&quot;:&quot;http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg&quot;},&quot;message&quot;:&quot;&quot;,&quot;ttl&quot;:1}</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span></div></div>
 
 </pre></div>
