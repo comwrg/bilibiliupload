@@ -17,7 +17,7 @@ b.login(...)
 b.upload(...)
 
 ```
-More details see docs
+More details see [docs](https://comwrg.github.io/bilibiliupload)
 
 ## Why not log print
 ```python
@@ -25,9 +25,6 @@ import logging
 logging.basicConfig()
 ```
 More details see python logger docs
-
-## Docs
-Documentation: https://comwrg.github.io/bilibiliupload
 
 ## Credits
 * Thanks `KAAAsS` provides [Login API](http://docs.kaaass.net/showdoc/web/#/2?page_id=12)
