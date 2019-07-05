@@ -35,29 +35,35 @@
           <div class="body" role="main">
             
   <h1>Source code for bilibiliupload.bilibili</h1><div class="highlight"><pre>
-<span></span><span class="c1"># coding=utf-8</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">:author: comwrg</span>
 <span class="sd">:license: MIT</span>
 <span class="sd">:time: 2017/06/09</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">rsa</span>
-<span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
+<span class="kn">import</span> <span class="nn">rsa</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BufferedReader</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">parse</span>
 
 <div class="viewcode-block" id="VideoPart"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.VideoPart">[docs]</a><span class="k">class</span> <span class="nc">VideoPart</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{clazz}</span><span class="s1">, path: </span><span class="si">{path}</span><span class="s1">, title: </span><span class="si">{title}</span><span class="s1">, desc: </span><span class="si">{desc}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">clazz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">desc</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Bilibili"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili">[docs]</a><span class="k">class</span> <span class="nc">Bilibili</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -79,7 +85,7 @@
 <span class="sd">        :param pwd: password</span>
 <span class="sd">        :type pwd: str</span>
 <span class="sd">        :return: if success return True</span>
-<span class="sd">                 else return msg json</span>
+<span class="sd">                 else raise Exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">APPKEY</span>    <span class="o">=</span> <span class="s1">&#39;1d8b6e7d45233436&#39;</span>
         <span class="n">ACTIONKEY</span> <span class="o">=</span> <span class="s1">&#39;appkey&#39;</span>
@@ -123,7 +129,7 @@
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                     <span class="s1">&#39;https://passport.bilibili.com/api/oauth2/getKey&#39;</span><span class="p">,</span>
                     <span class="n">signed_body</span><span class="p">({</span><span class="s1">&#39;appkey&#39;</span><span class="p">:</span> <span class="n">APPKEY</span><span class="p">}),</span>
-                 <span class="p">)</span>
+            <span class="p">)</span>
             <span class="c1"># {&quot;ts&quot;:1544152439,&quot;code&quot;:0,&quot;data&quot;:{&quot;hash&quot;:&quot;99c7573759582e0b&quot;,&quot;key&quot;:&quot;-----BEGIN PUBLIC----- -----END PUBLIC KEY-----\n&quot;}}</span>
             <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
@@ -140,21 +146,18 @@
         <span class="n">pwd</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
                   <span class="n">rsa</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
                       <span class="p">(</span><span class="n">h</span> <span class="o">+</span> <span class="n">pwd</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
-                      <span class="n">rsa</span><span class="o">.</span><span class="n">PublicKey</span><span class="o">.</span><span class="n">load_pkcs1_openssl_pem</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-                  <span class="p">)</span>
-              <span class="p">)</span>
+                      <span class="n">rsa</span><span class="o">.</span><span class="n">PublicKey</span><span class="o">.</span><span class="n">load_pkcs1_openssl_pem</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">encode</span><span class="p">()),</span>
+                  <span class="p">),</span>
+        <span class="p">)</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote_plus</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="n">pwd</span>  <span class="o">=</span> <span class="n">parse</span><span class="o">.</span><span class="n">quote_plus</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
                 <span class="s1">&#39;https://passport.bilibili.com/api/v2/oauth2/login&#39;</span><span class="p">,</span>
                 <span class="n">signed_body</span><span class="p">(</span><span class="s1">&#39;appkey=</span><span class="si">{appkey}</span><span class="s1">&amp;password=</span><span class="si">{password}</span><span class="s1">&amp;username=</span><span class="si">{username}</span><span class="s1">&#39;</span>
-                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">))</span>
-            <span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">appkey</span><span class="o">=</span><span class="n">APPKEY</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">105</span><span class="p">:</span>
             <span class="c1"># need captcha</span>
@@ -174,19 +177,17 @@
                                         <span class="n">password</span><span class="o">=</span><span class="n">pwd</span><span class="p">,</span>
                                         <span class="n">platform</span><span class="o">=</span><span class="n">PLATFORM</span><span class="p">,</span>
                                         <span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">)),</span>
-                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">json</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
-
-        <span class="n">ls</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;cookie_info&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]:</span>
-            <span class="n">ls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-        <span class="n">cookie</span> <span class="o">=</span> <span class="s1">&#39;; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="s1">&#39;; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;cookie_info&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;cookie&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;bili_jct=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mid</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;DedeUserID=(.*?);&#39;</span><span class="p">,</span> <span class="n">cookie</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Accept&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json, text/javascript, */*; q=0.01&#39;</span>
@@ -194,13 +195,12 @@
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
-
 <div class="viewcode-block" id="Bilibili.upload"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.upload">[docs]</a>    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-               <span class="n">parts</span><span class="p">,</span>
-               <span class="n">title</span><span class="p">,</span>
-               <span class="n">tid</span><span class="p">,</span>
-               <span class="n">tag</span><span class="p">,</span>
-               <span class="n">desc</span><span class="p">,</span>
+               <span class="n">parts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">VideoPart</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">VideoPart</span><span class="p">]],</span>
+               <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">tid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+               <span class="n">tag</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+               <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                <span class="n">source</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">cover</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">no_reprint</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -211,14 +211,14 @@
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param parts: e.g. VideoPart(&#39;part path&#39;, &#39;part title&#39;, &#39;part desc&#39;), or [VideoPart(...), VideoPart(...)]</span>
-<span class="sd">        :type parts: VideoPart or list&lt;VideoPart&gt;</span>
+<span class="sd">        :type parts: Union[VidePart, List[VideoPart]]</span>
 <span class="sd">        :param title: video&#39;s title</span>
 <span class="sd">        :type title: str</span>
-<span class="sd">        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre </span>
+<span class="sd">        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre</span>
 <span class="sd">                                  or https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8</span>
 <span class="sd">        :type tid: int</span>
 <span class="sd">        :param tag: video&#39;s tag</span>
-<span class="sd">        :type tag: list&lt;str&gt;</span>
+<span class="sd">        :type tag: List[str]</span>
 <span class="sd">        :param desc: video&#39;s description</span>
 <span class="sd">        :type desc: str 注: 最大长度 250，超过长度B站服务器会报错</span>
 <span class="sd">        :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</span>
@@ -353,8 +353,9 @@
                                       <span class="s2">&quot;order_id&quot;</span>  <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                                       <span class="s2">&quot;videos&quot;</span>    <span class="p">:</span> <span class="n">videos</span><span class="p">,</span>
                                       <span class="s2">&quot;dtime&quot;</span>     <span class="p">:</span> <span class="n">dtime</span><span class="p">,</span>
-                                      <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span><span class="p">}</span>
-                                  <span class="p">)</span>
+                                      <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span>
+                                  <span class="p">},</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span>
 
         <span class="k">def</span> <span class="nf">retry_add</span><span class="p">():</span>
@@ -413,17 +414,16 @@
                 <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                     <span class="s1">&#39;aids&#39;</span><span class="p">:</span> <span class="s1">&#39;%2C&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">aids</span><span class="p">),</span>
                     <span class="s1">&#39;cid&#39;</span> <span class="p">:</span> <span class="n">cid</span><span class="p">,</span>
-                    <span class="s1">&#39;csrf&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span>
-                <span class="p">}</span>
+                    <span class="s1">&#39;csrf&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
+                <span class="p">},</span>
                 <span class="c1"># aids=9953555%2C9872953&amp;cid=15814&amp;csrf=565d7ed17cef2cc8ad054210c4e64324&amp;_=1497079332679</span>
         <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Bilibili.cover_up"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.cover_up">[docs]</a>    <span class="k">def</span> <span class="nf">cover_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+<div class="viewcode-block" id="Bilibili.cover_up"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.Bilibili.cover_up">[docs]</a>    <span class="k">def</span> <span class="nf">cover_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BufferedReader</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param img: img path or stream</span>
-<span class="sd">        :type img: str or BufferedReader</span>
 <span class="sd">        :return: img URL</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -436,19 +436,12 @@
                 <span class="n">data</span><span class="o">=</span><span class="p">{</span>
                     <span class="s1">&#39;cover&#39;</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;data:image/jpeg;base64,&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())),</span>
                     <span class="s1">&#39;csrf&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">csrf</span><span class="p">,</span>
-                <span class="p">}</span>
+                <span class="p">},</span>
         <span class="p">)</span>
         <span class="c1"># print(r.text)</span>
         <span class="c1"># {&quot;code&quot;:0,&quot;data&quot;:{&quot;url&quot;:&quot;http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg&quot;},&quot;message&quot;:&quot;&quot;,&quot;ttl&quot;:1}</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span></div></div>
 
-
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../bilibiliupload.html#bilibiliupload.bilibili.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="k">pass</span></div>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
           </div>
@@ -457,10 +450,10 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -485,7 +478,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, comwrg.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
     </div>
   </body>
 </html>
