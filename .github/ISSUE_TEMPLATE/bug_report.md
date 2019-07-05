@@ -15,6 +15,17 @@ A clear and concise description of what the bug is.
 # Paste your code here.
 ```
 
+Debug log
+If no any log print, please add
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+```
+# Paste debug log here.
+```
+
 **Video uploaded**
 If possible please upload video to cloud disk and paste URL here.
 
