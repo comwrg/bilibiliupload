@@ -1,26 +1,32 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
+
 """
 :author: comwrg
 :license: MIT
 :time: 2017/06/09
 """
 
-import os
-import re
-import rsa
-import math
 import base64
 import hashlib
+import math
+import os
+import re
 import requests
-from urllib import parse
+import rsa
 import time
 
+from io import BufferedReader
+from typing import *
+from urllib import parse
 
 class VideoPart:
     def __init__(self, path, title='', desc=''):
         self.path = path
         self.title = title
         self.desc = desc
+
+    def __repr__(self):
+        return '<{clazz}, path: {path}, title: {title}, desc: {desc}>'.format(clazz=self.__class__.__name__, path=path, title=title, desc=desc)
 
 class Bilibili:
     def __init__(self, cookie=None):
@@ -42,7 +48,7 @@ class Bilibili:
         :param pwd: password
         :type pwd: str
         :return: if success return True
-                 else return msg json
+                 else raise Exception
         """
         APPKEY    = '1d8b6e7d45233436'
         ACTIONKEY = 'appkey'
@@ -86,7 +92,7 @@ class Bilibili:
             r = self.session.post(
                     'https://passport.bilibili.com/api/oauth2/getKey',
                     signed_body({'appkey': APPKEY}),
-                 )
+            )
             # {"ts":1544152439,"code":0,"data":{"hash":"99c7573759582e0b","key":"-----BEGIN PUBLIC----- -----END PUBLIC KEY-----\n"}}
             json = r.json()
             data = json['data']
@@ -103,21 +109,18 @@ class Bilibili:
         pwd = base64.b64encode(
                   rsa.encrypt(
                       (h + pwd).encode('utf-8'),
-                      rsa.PublicKey.load_pkcs1_openssl_pem(k.encode())
-                  )
-              )
+                      rsa.PublicKey.load_pkcs1_openssl_pem(k.encode()),
+                  ),
+        )
         user = parse.quote_plus(user)
         pwd  = parse.quote_plus(pwd)
 
         r = self.session.post(
                 'https://passport.bilibili.com/api/v2/oauth2/login',
                 signed_body('appkey={appkey}&password={password}&username={username}'
-                            .format(appkey=APPKEY, username=user, password=pwd))
-            )
-        try:
-            json = r.json()
-        except:
-            return r.text
+                            .format(appkey=APPKEY, username=user, password=pwd)),
+        )
+        json = r.json()
 
         if json['code'] == -105:
             # need captcha
@@ -137,19 +140,17 @@ class Bilibili:
                                         password=pwd,
                                         platform=PLATFORM,
                                         username=user)),
-                )
+            )
             json = r.json()
 
+        if json['code'] != 0:
+            raise Exception(r.text)
 
-        if json['code'] is not 0:
-            return r.text
-
-        ls = []
-        for item in json['data']['cookie_info']['cookies']:
-            ls.append(item['name'] + '=' + item['value'])
-        cookie = '; '.join(ls)
+        cookie = '; '.join(
+            '%s=%s' % (item['name'], item['value'])
+            for item in json['data']['cookie_info']['cookies']
+        )
         self.session.headers["cookie"] = cookie
-
         self.csrf = re.search('bili_jct=(.*?);', cookie).group(1)
         self.mid = re.search('DedeUserID=(.*?);', cookie).group(1)
         self.session.headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
@@ -157,13 +158,12 @@ class Bilibili:
 
         return True
 
-
     def upload(self,
-               parts,
-               title,
-               tid,
-               tag,
-               desc,
+               parts: Union[VideoPart, List[VideoPart]],
+               title: str,
+               tid: int,
+               tag: List[str],
+               desc: str,
                source='',
                cover='',
                no_reprint=1,
@@ -174,14 +174,14 @@ class Bilibili:
         """
 
         :param parts: e.g. VideoPart('part path', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
-        :type parts: VideoPart or list<VideoPart>
+        :type parts: Union[VidePart, List[VideoPart]]
         :param title: video's title
         :type title: str
-        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre 
+        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
                                   or https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8
         :type tid: int
         :param tag: video's tag
-        :type tag: list<str>
+        :type tag: List[str]
         :param desc: video's description
         :type desc: str 注: 最大长度 250，超过长度B站服务器会报错
         :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
@@ -316,8 +316,9 @@ class Bilibili:
                                       "order_id"  : 0,
                                       "videos"    : videos,
                                       "dtime"     : dtime,
-                                      "open_elec" : open_elec}
-                                  )
+                                      "open_elec" : open_elec
+                                  },
+            )
             return r
 
         def retry_add():
@@ -376,17 +377,16 @@ class Bilibili:
                 data={
                     'aids': '%2C'.join(aids),
                     'cid' : cid,
-                    'csrf': self.csrf
-                }
+                    'csrf': self.csrf,
+                },
                 # aids=9953555%2C9872953&cid=15814&csrf=565d7ed17cef2cc8ad054210c4e64324&_=1497079332679
         )
         print(r.json())
 
-    def cover_up(self, img):
+    def cover_up(self, img: Union[str, BufferedReader]):
         """
 
         :param img: img path or stream
-        :type img: str or BufferedReader
         :return: img URL
         """
 
@@ -399,16 +399,9 @@ class Bilibili:
                 data={
                     'cover': b'data:image/jpeg;base64,' + (base64.b64encode(f.read())),
                     'csrf': self.csrf,
-                }
+                },
         )
         # print(r.text)
         # {"code":0,"data":{"url":"http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg"},"message":"","ttl":1}
         return r.json()['data']['url']
 
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
