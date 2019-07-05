@@ -15,7 +15,7 @@ A clear and concise description of what the bug is.
 # Paste your code here.
 ```
 
-Debug log
+**Debug log**
 If no any log print, please add
 ```python
 import logging
