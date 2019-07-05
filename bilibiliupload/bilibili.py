@@ -404,6 +404,7 @@ class Bilibili:
             f = open(img, 'rb')
         else:
             f = img
+        self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
         r = self.session.post(
                 url='https://member.bilibili.com/x/vu/web/cover/up',
                 data={
