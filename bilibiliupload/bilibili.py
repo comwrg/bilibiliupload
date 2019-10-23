@@ -204,6 +204,10 @@ class Bilibili:
         :type max_retry: int
         """
 
+        assert len(title) <= 80, "标题长度超过80字"
+        assert len(desc) <= 250, "视频描述超过250字"
+        assert len(source) <= 200, "转载地址长度超过200字"
+        
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
         if not isinstance(parts, list):
             parts = [parts]
