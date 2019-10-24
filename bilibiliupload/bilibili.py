@@ -30,7 +30,7 @@ class VideoPart:
         self.desc = desc
 
     def __repr__(self):
-        return '<{clazz}, path: {path}, title: {title}, desc: {desc}>'.format(clazz=self.__class__.__name__, path=path, title=title, desc=desc)
+        return '<{clazz}, path: {path}, title: {title}, desc: {desc}>'.format(clazz=self.__class__.__name__, path=self.path, title=self.title, desc=self.desc)
 
 class Bilibili:
     def __init__(self, cookie=None):
@@ -204,6 +204,13 @@ class Bilibili:
         :type max_retry: int
         """
 
+        if len(title) > 80:
+            raise Exception("标题长度超过80字")
+        if len(desc) > 250:
+            raise Exception("视频描述超过250字")
+        if len(source) > 200:
+            raise Exception("转载地址长度超过200字")
+        
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
         if not isinstance(parts, list):
             parts = [parts]
