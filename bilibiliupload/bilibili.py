@@ -30,7 +30,7 @@ class VideoPart:
         self.desc = desc
 
     def __repr__(self):
-        return '<{clazz}, path: {path}, title: {title}, desc: {desc}>'.format(clazz=self.__class__.__name__, path=path, title=title, desc=desc)
+        return '<{clazz}, path: {path}, title: {title}, desc: {desc}>'.format(clazz=self.__class__.__name__, path=self.path, title=self.title, desc=self.desc)
 
 class Bilibili:
     def __init__(self, cookie=None):
