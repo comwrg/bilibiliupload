@@ -59,15 +59,15 @@
 <dl class="class">
 <dt id="bilibiliupload.bilibili.Bilibili">
 <em class="property">class </em><code class="sig-prename descclassname">bilibiliupload.bilibili.</code><code class="sig-name descname">Bilibili</code><span class="sig-paren">(</span><em class="sig-param">cookie=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.addChannel">
 <code class="sig-name descname">addChannel</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">intro=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.addChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.addChannel" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s name</p></li>
-<li><p><strong>intro</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – channel’s introduction</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – channel’s name</p></li>
+<li><p><strong>intro</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – channel’s introduction</p></li>
 </ul>
 </dd>
 </dl>
@@ -79,7 +79,7 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – channel’s id</p></li>
+<li><p><strong>cid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – channel’s id</p></li>
 <li><p><strong>aids</strong> (<em>list&lt;int&gt;</em>) – videos’ id</p></li>
 </ul>
 </dd>
@@ -105,8 +105,8 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – username</p></li>
-<li><p><strong>pwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – password</p></li>
+<li><p><strong>user</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – username</p></li>
+<li><p><strong>pwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – password</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -123,17 +123,17 @@ else raise Exception</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parts</strong> (<em>Union</em><em>[</em><em>VidePart</em><em>, </em><em>List</em><em>[</em><a class="reference internal" href="#bilibiliupload.bilibili.VideoPart" title="bilibiliupload.bilibili.VideoPart"><em>VideoPart</em></a><em>]</em><em>]</em>) – e.g. VideoPart(‘part path’, ‘part title’, ‘part desc’), or [VideoPart(…), VideoPart(…)]</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – video’s title</p></li>
-<li><p><strong>tid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – video type, see: <a class="reference external" href="https://member.bilibili.com/x/web/archive/pre">https://member.bilibili.com/x/web/archive/pre</a>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – video’s title</p></li>
+<li><p><strong>tid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – video type, see: <a class="reference external" href="https://member.bilibili.com/x/web/archive/pre">https://member.bilibili.com/x/web/archive/pre</a>
 or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8">https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8</a></p></li>
-<li><p><strong>tag</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>]</em>) – video’s tag</p></li>
+<li><p><strong>tag</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – video’s tag</p></li>
 <li><p><strong>desc</strong> (<em>str 注: 最大长度 250，超过长度B站服务器会报错</em>) – video’s description</p></li>
-<li><p><strong>dtime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</p></li>
-<li><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) 转载地址</p></li>
-<li><p><strong>cover</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – (optional) cover’s URL, use method <em>cover_up</em> to get</p></li>
-<li><p><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</p></li>
-<li><p><strong>open_elec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) 1=启用充电面板(默认) 0=禁止</p></li>
-<li><p><strong>max_retry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – (optional) max retry times per chunk</p></li>
+<li><p><strong>dtime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</p></li>
+<li><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (optional) 转载地址</p></li>
+<li><p><strong>cover</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (optional) cover’s URL, use method <em>cover_up</em> to get</p></li>
+<li><p><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</p></li>
+<li><p><strong>open_elec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) 1=启用充电面板(默认) 0=禁止</p></li>
+<li><p><strong>max_retry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) max retry times per chunk</p></li>
 </ul>
 </dd>
 </dl>
@@ -144,7 +144,7 @@ or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki
 <dl class="class">
 <dt id="bilibiliupload.bilibili.VideoPart">
 <em class="property">class </em><code class="sig-prename descclassname">bilibiliupload.bilibili.</code><code class="sig-name descname">VideoPart</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">title=''</em>, <em class="sig-param">desc=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#VideoPart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.VideoPart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 </dd></dl>
 
 </div>
