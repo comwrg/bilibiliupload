@@ -173,6 +173,7 @@ class Bilibili:
                source='',
                cover='',
                no_reprint=1,
+               dynamic='',
                dtime=None,
                open_elec=1,
                max_retry=5,
@@ -198,6 +199,8 @@ class Bilibili:
         :type cover: str
         :param no_reprint: (optional) 0=可以转载, 1=禁止转载(default)
         :type no_reprint: int
+        :param dynamic: 粉丝动态
+        :type dynamic: str
         :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
         :type open_elec: int
         :param max_retry: (optional) max retry times per chunk
@@ -332,7 +335,8 @@ class Bilibili:
                                       "order_id"  : 0,
                                       "videos"    : videos,
                                       "dtime"     : dtime,
-                                      "open_elec" : open_elec
+                                      "open_elec" : open_elec,
+                                      "dynamic"   : dynamic,
                                   },
             )
             log.debug(r.text)
