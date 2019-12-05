@@ -54,13 +54,13 @@ class Bilibili:
         :return: if success return True
                  else raise Exception
         """
-        APPKEY    = '1d8b6e7d45233436'
+        APPKEY    = '4409e2ce8ffd12b8'
         ACTIONKEY = 'appkey'
-        BUILD     = 520001
+        BUILD     = 101800
         DEVICE    = 'android'
         MOBI_APP  = 'android'
         PLATFORM  = 'android'
-        APPSECRET = '560c52ccd288fed045859ed18bffd973'
+        APPSECRET = '59b43e04ad6965f34319062b478f83dd'
 
         def md5(s):
             h = hashlib.md5()
