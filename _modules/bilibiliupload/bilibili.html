@@ -209,17 +209,17 @@
                <span class="n">desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                <span class="n">source</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">cover</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-               <span class="n">no_reprint</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">no_reprint</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                <span class="n">dynamic</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">dtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">open_elec</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">open_elec</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                <span class="n">open_subtitle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                <span class="n">max_retry</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param parts: e.g. VideoPart(&#39;part path&#39;, &#39;part title&#39;, &#39;part desc&#39;), or [VideoPart(...), VideoPart(...)]</span>
-<span class="sd">        :type parts: Union[VidePart, List[VideoPart]]</span>
+<span class="sd">        :type parts: Union[VideoPart, List[VideoPart]]</span>
 <span class="sd">        :param title: video&#39;s title</span>
 <span class="sd">        :type title: str</span>
 <span class="sd">        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre</span>
@@ -235,12 +235,12 @@
 <span class="sd">        :type source: str</span>
 <span class="sd">        :param cover: (optional) cover&#39;s URL, use method *cover_up* to get</span>
 <span class="sd">        :type cover: str</span>
-<span class="sd">        :param no_reprint: (optional) 0=可以转载, 1=禁止转载(default)</span>
-<span class="sd">        :type no_reprint: int</span>
+<span class="sd">        :param no_reprint: (optional) Is reprint allowed</span>
+<span class="sd">        :type no_reprint: bool</span>
 <span class="sd">        :param dynamic: 粉丝动态</span>
 <span class="sd">        :type dynamic: str</span>
-<span class="sd">        :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止</span>
-<span class="sd">        :type open_elec: int</span>
+<span class="sd">        :param open_elec: (optional) whether to open charging panel (充电面板)</span>
+<span class="sd">        :type open_elec: bool</span>
 <span class="sd">        :param open_subtitle: (optional) Is uploading subtitles allowed</span>
 <span class="sd">        :type open_subtitle: bool</span>
 <span class="sd">        :param max_retry: (optional) max retry times per chunk</span>
@@ -253,7 +253,7 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;视频描述超过250字&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;转载地址长度超过200字&quot;</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json; charset=utf-8&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">parts</span><span class="p">]</span>
@@ -368,14 +368,14 @@
                                       <span class="s2">&quot;title&quot;</span>     <span class="p">:</span> <span class="n">title</span><span class="p">,</span>
                                       <span class="s2">&quot;tid&quot;</span>       <span class="p">:</span> <span class="n">tid</span><span class="p">,</span>
                                       <span class="s2">&quot;tag&quot;</span>       <span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tag</span><span class="p">),</span>
-                                      <span class="s2">&quot;no_reprint&quot;</span><span class="p">:</span> <span class="n">no_reprint</span><span class="p">,</span>
+                                      <span class="s2">&quot;no_reprint&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">no_reprint</span><span class="p">),</span>
                                       <span class="s2">&quot;desc&quot;</span>      <span class="p">:</span> <span class="n">desc</span><span class="p">,</span>
                                       <span class="s2">&quot;cover&quot;</span>     <span class="p">:</span> <span class="n">cover</span><span class="p">,</span>
                                       <span class="s2">&quot;mission_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                                       <span class="s2">&quot;order_id&quot;</span>  <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
                                       <span class="s2">&quot;videos&quot;</span>    <span class="p">:</span> <span class="n">videos</span><span class="p">,</span>
                                       <span class="s2">&quot;dtime&quot;</span>     <span class="p">:</span> <span class="n">dtime</span><span class="p">,</span>
-                                      <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span><span class="p">,</span>
+                                      <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">open_elec</span><span class="p">),</span>
                                       <span class="s2">&quot;dynamic&quot;</span>   <span class="p">:</span> <span class="n">dynamic</span><span class="p">,</span>
                                       <span class="s2">&quot;subtitle&quot;</span>  <span class="p">:</span> <span class="p">{</span>
                                           <span class="s2">&quot;lan&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
