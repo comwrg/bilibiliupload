@@ -118,7 +118,7 @@ else raise Exception</p>
 
 <dl class="method">
 <dt id="bilibiliupload.bilibili.Bilibili.upload">
-<code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param">parts: Union[bilibiliupload.bilibili.VideoPart, List[bilibiliupload.bilibili.VideoPart]], title: str, tid: int, tag: List[str], desc: str, source='', cover='', no_reprint=1, dynamic='', dtime=None, open_elec=1, max_retry=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.upload" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">upload</code><span class="sig-paren">(</span><em class="sig-param">parts: Union[bilibiliupload.bilibili.VideoPart, List[bilibiliupload.bilibili.VideoPart]], title: str, tid: int, tag: List[str], desc: str, source='', cover='', no_reprint=1, dynamic='', dtime=None, open_elec=1, open_subtitle: bool = True, max_retry=5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/bilibiliupload/bilibili.html#Bilibili.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bilibiliupload.bilibili.Bilibili.upload" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -134,6 +134,7 @@ or <a class="reference external" href="https://github.com/uupers/BiliSpider/wiki
 <li><p><strong>no_reprint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) 0=可以转载, 1=禁止转载(default)</p></li>
 <li><p><strong>dynamic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – 粉丝动态</p></li>
 <li><p><strong>open_elec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) 1=启用充电面板(默认) 0=禁止</p></li>
+<li><p><strong>open_subtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – (optional) Is uploading subtitles allowed</p></li>
 <li><p><strong>max_retry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – (optional) max retry times per chunk</p></li>
 </ul>
 </dd>

@@ -213,6 +213,7 @@
                <span class="n">dynamic</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                <span class="n">dtime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">open_elec</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">open_subtitle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                <span class="n">max_retry</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -240,6 +241,8 @@
 <span class="sd">        :type dynamic: str</span>
 <span class="sd">        :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止</span>
 <span class="sd">        :type open_elec: int</span>
+<span class="sd">        :param open_subtitle: (optional) Is uploading subtitles allowed</span>
+<span class="sd">        :type open_subtitle: bool</span>
 <span class="sd">        :param max_retry: (optional) max retry times per chunk</span>
 <span class="sd">        :type max_retry: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -374,6 +377,10 @@
                                       <span class="s2">&quot;dtime&quot;</span>     <span class="p">:</span> <span class="n">dtime</span><span class="p">,</span>
                                       <span class="s2">&quot;open_elec&quot;</span> <span class="p">:</span> <span class="n">open_elec</span><span class="p">,</span>
                                       <span class="s2">&quot;dynamic&quot;</span>   <span class="p">:</span> <span class="n">dynamic</span><span class="p">,</span>
+                                      <span class="s2">&quot;subtitle&quot;</span>  <span class="p">:</span> <span class="p">{</span>
+                                          <span class="s2">&quot;lan&quot;</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                          <span class="s2">&quot;open&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">open_subtitle</span><span class="p">),</span>
+                                      <span class="p">},</span>
                                   <span class="p">},</span>
             <span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
