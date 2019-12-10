@@ -182,7 +182,7 @@ class Bilibili:
         """
 
         :param parts: e.g. VideoPart('part path', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
-        :type parts: Union[VidePart, List[VideoPart]]
+        :type parts: Union[VideoPart, List[VideoPart]]
         :param title: video's title
         :type title: str
         :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
