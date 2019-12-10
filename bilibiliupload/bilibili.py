@@ -172,10 +172,10 @@ class Bilibili:
                desc: str,
                source='',
                cover='',
-               no_reprint=1,
+               no_reprint: bool = True,
                dynamic='',
                dtime=None,
-               open_elec=1,
+               open_elec: bool = True,
                open_subtitle: bool = True,
                max_retry=5,
                ):
@@ -198,12 +198,12 @@ class Bilibili:
         :type source: str
         :param cover: (optional) cover's URL, use method *cover_up* to get
         :type cover: str
-        :param no_reprint: (optional) 0=可以转载, 1=禁止转载(default)
-        :type no_reprint: int
+        :param no_reprint: (optional) Is reprint allowed
+        :type no_reprint: bool
         :param dynamic: 粉丝动态
         :type dynamic: str
-        :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
-        :type open_elec: int
+        :param open_elec: (optional) whether to open charging panel (充电面板)
+        :type open_elec: bool
         :param open_subtitle: (optional) Is uploading subtitles allowed
         :type open_subtitle: bool
         :param max_retry: (optional) max retry times per chunk
@@ -216,7 +216,7 @@ class Bilibili:
             raise Exception("视频描述超过250字")
         if len(source) > 200:
             raise Exception("转载地址长度超过200字")
-        
+
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
         if not isinstance(parts, list):
             parts = [parts]
@@ -331,14 +331,14 @@ class Bilibili:
                                       "title"     : title,
                                       "tid"       : tid,
                                       "tag"       : ','.join(tag),
-                                      "no_reprint": no_reprint,
+                                      "no_reprint": int(no_reprint),
                                       "desc"      : desc,
                                       "cover"     : cover,
                                       "mission_id": 0,
                                       "order_id"  : 0,
                                       "videos"    : videos,
                                       "dtime"     : dtime,
-                                      "open_elec" : open_elec,
+                                      "open_elec" : int(open_elec),
                                       "dynamic"   : dynamic,
                                       "subtitle"  : {
                                           "lan" : "",
