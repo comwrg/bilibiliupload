@@ -176,6 +176,7 @@ class Bilibili:
                dynamic='',
                dtime=None,
                open_elec=1,
+               open_subtitle: bool = True,
                max_retry=5,
                ):
         """
@@ -203,6 +204,8 @@ class Bilibili:
         :type dynamic: str
         :param open_elec: (optional) 1=启用充电面板(默认) 0=禁止
         :type open_elec: int
+        :param open_subtitle: (optional) Is uploading subtitles allowed
+        :type open_subtitle: bool
         :param max_retry: (optional) max retry times per chunk
         :type max_retry: int
         """
@@ -337,6 +340,10 @@ class Bilibili:
                                       "dtime"     : dtime,
                                       "open_elec" : open_elec,
                                       "dynamic"   : dynamic,
+                                      "subtitle"  : {
+                                          "lan" : "",
+                                          "open": int(open_subtitle),
+                                      },
                                   },
             )
             log.debug(r.text)
