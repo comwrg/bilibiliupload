@@ -20,6 +20,9 @@ from io import BufferedReader
 from typing import *
 from urllib import parse
 
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
+
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
 
@@ -223,6 +226,16 @@ class Bilibili:
         self.session.headers['Content-Type'] = 'application/json; charset=utf-8'
         if not isinstance(parts, list):
             parts = [parts]
+
+        # retry by status
+        retries = Retry(
+            total=max_retry,
+            backoff_factor=1,
+            status_forcelist=(504, ),
+        )
+        self.session.mount('https://', HTTPAdapter(max_retries=retries))
+        self.session.mount('http://', HTTPAdapter(max_retries=retries))
+        #
 
         videos = []
         for part in parts:
