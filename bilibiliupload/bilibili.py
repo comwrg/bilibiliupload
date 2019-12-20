@@ -35,6 +35,11 @@ class VideoPart:
 class Bilibili:
     def __init__(self, cookie=None):
         self.session = requests.session()
+        # debug
+        def debug_response(r, *args, **kwargs):
+            log.debug(r.text)
+        self.session.hooks = {'response': debug_response}
+        #
         if cookie:
             self.session.headers["cookie"] = cookie
             self.csrf = re.search('bili_jct=(.*?)(;|$)', cookie).group(1)
@@ -124,7 +129,6 @@ class Bilibili:
                 signed_body('appkey={appkey}&password={password}&username={username}'
                             .format(appkey=APPKEY, username=user, password=pwd)),
         )
-        log.debug(r.text)
         json = r.json()
 
         if json['code'] == -105:
@@ -146,7 +150,6 @@ class Bilibili:
                                         platform=PLATFORM,
                                         username=user)),
             )
-            log.debug(r.text)
             json = r.json()
 
         if json['code'] != 0:
@@ -284,7 +287,6 @@ class Bilibili:
                                                     ),
                                             chunks_data,
                                             )
-                        log.debug(r.text)
                         return r
 
                     def retry_upload_chunk():
@@ -346,7 +348,6 @@ class Bilibili:
                                       },
                                   },
             )
-            log.debug(r.text)
             return r
 
         def retry_add():
@@ -389,7 +390,6 @@ class Bilibili:
         )
         # return
         # {"status":true,"data":{"cid":"15812"}}
-        log.debug(r.text)
 
     def channel_addVideo(self, cid, aids):
         """
@@ -409,7 +409,6 @@ class Bilibili:
                 },
                 # aids=9953555%2C9872953&cid=15814&csrf=565d7ed17cef2cc8ad054210c4e64324&_=1497079332679
         )
-        log.debug(r.text)
 
     def cover_up(self, img: Union[str, BufferedReader]):
         """
@@ -431,6 +430,5 @@ class Bilibili:
                 },
         )
         # {"code":0,"data":{"url":"http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg"},"message":"","ttl":1}
-        log.debug(r.text)
         return r.json()['data']['url']
 
