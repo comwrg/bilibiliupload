@@ -197,7 +197,7 @@ class Bilibili:
         :param tag: video's tag
         :type tag: List[str]
         :param desc: video's description
-        :type desc: str 注: 最大长度 250，超过长度B站服务器会报错
+        :type desc: str
         :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
         :type dtime: int
         :param source: (optional) 转载地址
@@ -218,8 +218,6 @@ class Bilibili:
 
         if len(title) > 80:
             raise Exception("标题长度超过80字")
-        if len(desc) > 250:
-            raise Exception("视频描述超过250字")
         if len(source) > 200:
             raise Exception("转载地址长度超过200字")
 
