@@ -234,7 +234,7 @@
 <span class="sd">        :param tag: video&#39;s tag</span>
 <span class="sd">        :type tag: List[str]</span>
 <span class="sd">        :param desc: video&#39;s description</span>
-<span class="sd">        :type desc: str 注: 最大长度 250，超过长度B站服务器会报错</span>
+<span class="sd">        :type desc: str</span>
 <span class="sd">        :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)</span>
 <span class="sd">        :type dtime: int</span>
 <span class="sd">        :param source: (optional) 转载地址</span>
@@ -255,8 +255,6 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;标题长度超过80字&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">250</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;视频描述超过250字&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;转载地址长度超过200字&quot;</span><span class="p">)</span>
 
@@ -518,7 +516,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2018, comwrg.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
     </div>
   </body>
 </html>
