@@ -65,8 +65,8 @@ class Bilibili:
         APPKEY    = '4409e2ce8ffd12b8'
         ACTIONKEY = 'appkey'
         BUILD     = 101800
-        DEVICE    = 'android'
-        MOBI_APP  = 'android'
+        DEVICE    = 'android_tv_yst'
+        MOBI_APP  = 'android_tv_yst'
         PLATFORM  = 'android'
         APPSECRET = '59b43e04ad6965f34319062b478f83dd'
 
@@ -110,11 +110,16 @@ class Bilibili:
             data = json['data']
             return data['hash'], data['key']
 
-        def cnn_captcha(img):
-            url = "http://47.95.255.188:5000/code"
-            data = {"image": img}
-            r = requests.post(url, data=data)
-            return r.text
+        def access_token_2_cookie(access_token):
+            r = self.session.get(
+                'https://passport.bilibili.com/api/login/sso?' + \
+                signed_body(
+                    'access_key={access_token}&appkey={appkey}&gourl=https%3A%2F%2Faccount.bilibili.com%2Faccount%2Fhome'
+                    .format(access_token=access_token, appkey=APPKEY),
+                ),
+                allow_redirects=False,
+            )
+            return r.cookies.get_dict(domain=".bilibili.com")
 
         self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         h, k = getkey()
@@ -128,39 +133,27 @@ class Bilibili:
         pwd  = parse.quote_plus(pwd)
 
         r = self.session.post(
-                'https://passport.bilibili.com/api/v2/oauth2/login',
-                signed_body('appkey={appkey}&password={password}&username={username}'
-                            .format(appkey=APPKEY, username=user, password=pwd)),
+            'https://passport.snm0516.aisee.tv/api/tv/login',
+            signed_body(
+                'appkey={appkey}&build={build}&captcha=&channel=master&'
+                'guid=XYEBAA3E54D502E37BD606F0589A356902FCF&mobi_app={mobi_app}&'
+                'password={password}&platform={platform}&token=5598158bcd8511e2&ts=0&username={username}'
+                .format(appkey=APPKEY, build=BUILD, platform=PLATFORM, mobi_app=MOBI_APP, username=user, password=pwd)),
         )
         json = r.json()
 
         if json['code'] == -105:
             # need captcha
-            self.session.headers['cookie'] = 'sid=xxxxxxxx'
-            r = self.session.get('https://passport.bilibili.com/captcha')
-            captcha = cnn_captcha(base64.b64encode(r.content))
-            r = self.session.post(
-                    'https://passport.bilibili.com/api/v2/oauth2/login',
-                    signed_body('actionKey={actionKey}&appkey={appkey}&build={build}&captcha={captcha}&device={device}'
-                                '&mobi_app={mobi_app}&password={password}&platform={platform}&username={username}'
-                                .format(actionKey=ACTIONKEY,
-                                        appkey=APPKEY,
-                                        build=BUILD,
-                                        captcha=captcha,
-                                        device=DEVICE,
-                                        mobi_app=MOBI_APP,
-                                        password=pwd,
-                                        platform=PLATFORM,
-                                        username=user)),
-            )
-            json = r.json()
+            raise Exception('TODO: login with captcha')
 
         if json['code'] != 0:
             raise Exception(r.text)
 
+        access_token = json['data']['token_info']['access_token']
+        cookie_dict = access_token_2_cookie(access_token)
         cookie = '; '.join(
-            '%s=%s' % (item['name'], item['value'])
-            for item in json['data']['cookie_info']['cookies']
+            '%s=%s' % (k, v)
+            for k, v in cookie_dict.items()
         )
         self.session.headers["cookie"] = cookie
         self.csrf = re.search('bili_jct=(.*?)(;|$)', cookie).group(1)
