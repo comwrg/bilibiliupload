@@ -18,7 +18,7 @@ b.login(...)
 b.upload(...)
 
 ```
-More details see [docs](https://comwrg.github.io/bilibiliupload)
+More details see [source code](https://github.com/comwrg/bilibiliupload/tree/master/bilibiliupload)
 
 ## Why not log print
 ```python
