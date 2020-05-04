@@ -55,12 +55,11 @@ class Bilibili:
     def login(self, user, pwd):
         """
 
-        :param user: username
+        :param user: 用户名
         :type user: str
-        :param pwd: password
+        :param pwd: 密码
         :type pwd: str
-        :return: if success return True
-                 else raise Exception
+        :return: 如果成功返回true,失败返回失败信息
         """
         APPKEY    = '4409e2ce8ffd12b8'
         ACTIONKEY = 'appkey'
@@ -180,32 +179,32 @@ class Bilibili:
                ):
         """
 
-        :param parts: e.g. VideoPart('part path', 'part title', 'part desc'), or [VideoPart(...), VideoPart(...)]
+        :param parts: 视频列表 VideoPart('part path', 'part title', 'part desc'), 或者 [VideoPart(...), VideoPart(...)]
         :type parts: Union[VideoPart, List[VideoPart]]
-        :param title: video's title
+        :param title: 视频标题
         :type title: str
-        :param tid: video type, see: https://member.bilibili.com/x/web/archive/pre
-                                  or https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8
+        :param tid: 视频分区ID, 参考: https://member.bilibili.com/x/web/archive/pre
+                                    或者https://github.com/uupers/BiliSpider/wiki/%E8%A7%86%E9%A2%91%E5%88%86%E5%8C%BA%E5%AF%B9%E5%BA%94%E8%A1%A8
         :type tid: int
-        :param tag: video's tag
+        :param tag: 视频tag
         :type tag: List[str]
-        :param desc: video's description
+        :param desc: 视频简介
         :type desc: str
-        :param dtime: (optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
+        :param dtime: 定时发布的时间戳,可选(optional) publish date timestamp (10 digits Unix timestamp e.g. 1551533438)
         :type dtime: int
-        :param source: (optional) 转载地址
+        :param source: 可选:(optional) 转载地址
         :type source: str
-        :param cover: (optional) cover's URL, use method *cover_up* to get
+        :param cover: 可选:视频封面(optional) cover's URL, use method *cover_up* to get
         :type cover: str
-        :param no_reprint: (optional) Is reprint allowed
+        :param no_reprint: 可选:是否允许转载(optional) Is reprint allowed
         :type no_reprint: bool
         :param dynamic: 粉丝动态
         :type dynamic: str
-        :param open_elec: (optional) whether to open charging panel (充电面板)
+        :param open_elec: 可选:是否开启充电(optional) whether to open charging panel
         :type open_elec: bool
-        :param open_subtitle: (optional) Is uploading subtitles allowed
+        :param open_subtitle: 可选:是否允许上传字幕(optional) Is uploading subtitles allowed
         :type open_subtitle: bool
-        :param max_retry: (optional) max retry times per chunk
+        :param max_retry: 可选:每块最大重试时间(optional) max retry times per chunk
         :type max_retry: int
         """
 
