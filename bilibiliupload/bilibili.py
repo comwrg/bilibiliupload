@@ -436,3 +436,183 @@ class Bilibili:
         # {"code":0,"data":{"url":"http://i0.hdslb.com/bfs/archive/67db4a6eae398c309244e74f6e85ae8d813bd7c9.jpg"},"message":"","ttl":1}
         return r.json()['data']['url']
 
+    def nav(self):
+        """
+
+        '''
+        '''
+        return example
+
+            {"code":-101,"message":"账号未登录","ttl":1,"data":{"isLogin":false}}
+
+            {
+                "code": 0,
+                "message": "0",
+                "ttl": 1,
+                "data": {
+                    "isLogin": true,
+                    "email_verified": 0,
+                    "face": "http://i0.hdslb.com/bfs/face/member/noface.jpg",
+                    "level_info": {
+                        "current_level": 2,
+                        "current_min": 200,
+                        "current_exp": 240,
+                        "next_exp": 1500
+                    },
+                    "mid": 2086473161,
+                    "mobile_verified": 1,
+                    "money": 3,
+                    "moral": 70,
+                    "official": {
+                        "role": 0,
+                        "title": "",
+                        "desc": "",
+                        "type": -1
+                    },
+                    "officialVerify": {
+                        "type": -1,
+                        "desc": ""
+                    },
+                    "pendant": {
+                        "pid": 0,
+                        "name": "",
+                        "image": "",
+                        "expire": 0,
+                        "image_enhance": "",
+                        "image_enhance_frame": ""
+                    },
+                    "scores": 0,
+                    "uname": "bili_2086473161",
+                    "vipDueDate": 0,
+                    "vipStatus": 0,
+                    "vipType": 0,
+                    "vip_pay_type": 0,
+                    "vip_theme_type": 0,
+                    "vip_label": {
+                        "path": "",
+                        "text": "",
+                        "label_theme": ""
+                    },
+                    "vip_avatar_subscript": 0,
+                    "vip_nickname_color": "",
+                    "wallet": {
+                        "mid": 2086473161,
+                        "bcoin_balance": 0,
+                        "coupon_balance": 0,
+                        "coupon_due_time": 0
+                    },
+                    "has_shop": false,
+                    "shop_url": "",
+                    "allowance_count": 0,
+                    "answer_status": 0
+                }
+            }
+        
+        """
+
+        self.session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+        r = self.session.get(url='https://api.bilibili.com/x/web-interface/nav')
+        return r.json()
+
+    def search(self,
+               cate_id: int,
+               time_from: str,
+               time_to: str,
+               copy_right: int = -1,
+               order: str = 'click',
+               search_type: str = 'video',
+               view_type: str = 'hot_rank',
+               page: int = 1,
+               pagesize: int = 20):
+        """
+
+        :param cate_id: 分区id
+        :type cate_id: int
+        :param time_from: time from yyyymmdd
+        :type time_from: str
+        :param time_to: time to yyyymmdd
+        :type time_to: str
+        :param copy_right: -1原创或转载 / 0转载 / 1原创
+        :type copy_right: int
+        :param order: click点击数 / stow收藏数 / scores评论数 / coin硬币数 / dm弹幕数
+        :type order: str
+        :param search_type: video / ...
+        :type search_type: str
+        :param view_type: hot_rank / ...
+        :type view_type: str
+        :param page: page number
+        :type page: int
+        :param pagesize: page size
+        :type pagesize: int
+        """
+
+        r = self.session.get(
+            'https://s.search.bilibili.com/cate/search?'
+            'main_ver=v3&search_type={search_type}&view_type={view_type}&order={order}&copy_right={copy_right}'
+            '&cate_id={cate_id}&page={page}&pagesize={pagesize}&jsonp=jsonp&time_from={time_from}&time_to={time_to}'.
+            format(search_type=search_type,
+                   view_type=view_type,
+                   order=order,
+                   copy_right=copy_right,
+                   cate_id=cate_id,
+                   page=page,
+                   pagesize=pagesize,
+                   time_from=time_from,
+                   time_to=time_to))
+        # {"code":0,"msg":success,"numPages":3,"numResults":57,"result":[...]}
+        return r.json()
+
+    def get_comments(self, oid: int, pn: int = 1, ps: int = 20, sort: int = 0, root: int = -1):
+        """
+        :param oid: aid
+        :type oid: int
+        :param pn: page number
+        :type pn: int
+        :param ps: page size
+        :type ps: int
+        :param sort: 0按时间 / 2按热度
+        :type sort: int
+        :param root: 回复评论的根id
+        :type root: int
+        """
+
+        if root == -1:
+            r = self.session.get('https://api.bilibili.com/x/v2/reply?'
+                                 'jsonp=jsonp&pn={pn}&ps={ps}&type=1&oid={oid}&sort={sort}'.format(pn=pn,
+                                                                                                   ps=ps,
+                                                                                                   oid=oid,
+                                                                                                   sort=sort))
+        else:
+            r = self.session.get('https://api.bilibili.com/x/v2/reply/reply?'
+                                 'jsonp=jsonp&pn={pn}&ps={ps}&type=1&oid={oid}&root={root}'.format(pn=pn,
+                                                                                                   ps=ps,
+                                                                                                   oid=oid,
+                                                                                                   root=root))
+        return r.json()
+        # {"code":0,"data":{...},"message":"0","ttl":1}
+
+    def like_comment(self, oid: int, rpid: int, action: int = 1):
+        """
+        :param oid: aid
+        :type oid: int
+        :param rpid: comment id
+        :type rpid: int
+        :param action: 1点赞 / 0取消赞
+        :type action: int
+        """
+
+        r = self.session.post(
+            url='https://api.bilibili.com/x/v2/reply/action',
+            data={
+                'oid': oid,
+                'rpid': rpid,
+                'action': action,
+                'type': 1,
+                'ordering': 'time',
+                'jsonp': 'jsonp',
+                'csrf': self.csrf,
+            },
+            # oid=670521796&type=1&rpid=3810667868&action=1&ordering=time&jsonp=jsonp&csrf=565d7ed17cef2cc8ad054210c4e64324
+        )
+        return r.json()
+        # {"code":0,"message":"0","ttl":1}
